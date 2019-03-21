@@ -40,6 +40,11 @@ public class VehicleListActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
 
+        //get arraylist
+        Bundle extra = getIntent().getBundleExtra("extra");
+        vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+
+
         FloatingActionButton fab = findViewById(R.id.fabAddVehicle);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +52,9 @@ public class VehicleListActivity extends AppCompatActivity {
 //                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 Intent intent = new Intent(VehicleListActivity.this, AddVehicleActivity.class);
+                Bundle extra = new Bundle();
+                extra.putSerializable("vehicleList", vehicleList);
+                intent.putExtra("extra", extra);
                 startActivity(intent);
 
 
@@ -55,17 +63,17 @@ public class VehicleListActivity extends AppCompatActivity {
 
         //test code for custom view
 
-        int[] icon = new int[1];
-        icon[0] = R.drawable.baseline_directions_car_black_18dp;
-       // int testCarInt = findViewById(R.drawable.baseline_directions_car_black_18dp);
-        Vehicle testCar = new Vehicle("testcar", icon[0]);
-
-        int[] icon2 = new int[1];
-        icon2[0] = R.drawable.baseline_directions_car_black_18dp;
-        Vehicle testCarTwo = new Vehicle("testcar 2", icon2[0]);
-
-        vehicleList.add(testCar);
-        vehicleList.add(testCarTwo);
+//        int[] icon = new int[1];
+//        icon[0] = R.drawable.baseline_directions_car_black_18dp;
+//       // int testCarInt = findViewById(R.drawable.baseline_directions_car_black_18dp);
+//        Vehicle testCar = new Vehicle("testcar", icon[0]);
+//
+//        int[] icon2 = new int[1];
+//        icon2[0] = R.drawable.baseline_directions_car_black_18dp;
+//        Vehicle testCarTwo = new Vehicle("testcar 2", icon2[0]);
+//
+//        vehicleList.add(testCar);
+//        vehicleList.add(testCarTwo);
         //end of test code for custom view,
 
         ListView vehicleListView = findViewById(R.id.vehicleListView);
@@ -88,12 +96,15 @@ public class VehicleListActivity extends AppCompatActivity {
             }
             public void onSwipeRight() {
                 //test send arraylist to firestore
-                arrayListToFirebaseTest(vehicleList);
+               // arrayListToFirebaseTest(vehicleList);
               Toast.makeText(VehicleListActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeLeft() {
 
                 Intent intent = new Intent(VehicleListActivity.this, MainActivity.class);
+                Bundle extra = new Bundle();
+                extra.putSerializable("vehicleList", vehicleList);
+                intent.putExtra("extra", extra);
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
 

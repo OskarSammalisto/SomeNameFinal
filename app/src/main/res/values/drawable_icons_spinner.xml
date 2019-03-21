@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="icons_spinner">
+        <item>@drawable/baseline_directions_car_black_18dp</item>
+        <item>@drawable/baseline_directions_bike_black_18dp</item>
+        <item>@drawable/baseline_directions_boat_black_18dp</item>
+    </integer-array>
+
+
+</resources>

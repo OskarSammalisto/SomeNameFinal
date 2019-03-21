@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //git test text
 //    private static final String TAG = "MainActivity"; //FireStore Constant
     FirebaseFirestore db;
+    ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
 //    private View.OnTouchListener onTouchListener = new com.example.somename.OnSwipeTouchListener(MainActivity.this);
 
@@ -46,6 +48,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        //get arraylist
+        Bundle extra = getIntent().getBundleExtra("extra");
+        if (extra != null) {
+            vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+        }
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +61,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .setAction("Action", null).show();
             }
         });
+
+
+        //test code for custom view
+//        if (vehicleList.isEmpty()) {
+//            int[] icon = new int[1];
+//            icon[0] = R.drawable.baseline_directions_car_black_18dp;
+//            // int testCarInt = findViewById(R.drawable.baseline_directions_car_black_18dp);
+//            Vehicle testCar = new Vehicle("testcar", icon[0]);
+//
+//            int[] icon2 = new int[1];
+//            icon2[0] = R.drawable.baseline_directions_car_black_18dp;
+//            Vehicle testCarTwo = new Vehicle("testcar 2", icon2[0]);
+//
+//            int[] icon3 = new int[1];
+//            icon3[0] = R.drawable.baseline_directions_car_black_18dp;
+//            Vehicle testCarThree = new Vehicle("fuck yeah", icon3[0]);
+//
+//            vehicleList.add(testCar);
+//            vehicleList.add(testCarTwo);
+//            vehicleList.add(testCarThree);
+//        }
+        //end of test code for custom view,
 
 
        //set swipe listener on activity main
@@ -65,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             public void onSwipeRight() {
                 Intent intent = new Intent(MainActivity.this, VehicleListActivity.class);
+                //intent.putExtra("vehicleList", vehicleList);
+                Bundle extra = new Bundle();
+                extra.putSerializable("vehicleList", vehicleList);
+                intent.putExtra("extra", extra);
+
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                // Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();

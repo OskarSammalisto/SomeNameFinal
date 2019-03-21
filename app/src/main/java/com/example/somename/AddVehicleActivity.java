@@ -2,17 +2,22 @@ package com.example.somename;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,10 +32,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class AddVehicleActivity extends AppCompatActivity {
-//ss
+//s
+ArrayList<Vehicle> vehicleList = new ArrayList<>();
     private static final int REQUEST_TAKE_PHOTO = 1;
     private static final String TAG = "AddVehicleActivity";
     private ImageView imageViewNewCarPicture;
@@ -40,6 +47,10 @@ public class AddVehicleActivity extends AppCompatActivity {
     private File photoFile;
     private FirebaseFirestore db;
     private StorageReference mStorageRef;
+    private EditText newVehicleName;
+    private EditText newVehicleDescription;
+    private FloatingActionButton confirmButton;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,22 @@ public class AddVehicleActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        //set view and button variables
+        newVehicleName = findViewById(R.id.newVehicleName);
+        newVehicleDescription = findViewById(R.id.vehicleDescription);
+        confirmButton = findViewById(R.id.createVehicleButton);
+        spinner = findViewById(R.id.iconSpinner);
+
+
+        //try to populate spinner with icons
+//        ArrayAdapter<Integer> adapter = ArrayAdapter.createFromResource(this, R.array.icons_spinner, R.layout.support_simple_spinner_dropdown_item);
+//        spinner.setAdapter(adapter);
+
+
+        //get arraylist
+        Bundle extra = getIntent().getBundleExtra("extra");
+        vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
 
         ImageView imageViewNewCarPictureButton = findViewById(R.id.imageViewNewCarPicture);
 
@@ -58,6 +85,32 @@ public class AddVehicleActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 dispatchTakePictureIntent();
+            }
+        });
+
+        //create new vehicle and go back to vehicleListActivity. Will need error handlers!!!!!!
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //replace with actual icon selection and add description
+                int[] icon2 = new int[1];
+                icon2[0] = R.drawable.baseline_directions_car_black_18dp;
+
+//                String filePath = photoFile.getPath();  //this code crashes program as is!!!
+//                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+
+                Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(),  icon2[0]);
+                vehicleList.add(vehicle);
+
+                Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
+
+                Bundle extra = new Bundle();
+                extra.putSerializable("vehicleList", vehicleList);
+                intent.putExtra("extra", extra);
+
+                startActivity(intent);
+
             }
         });
 
