@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-//ss
+//git test text
 //    private static final String TAG = "MainActivity"; //FireStore Constant
     FirebaseFirestore db;
 
