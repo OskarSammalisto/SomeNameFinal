@@ -1,11 +1,15 @@
 package com.example.somename;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
@@ -15,10 +19,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.location.Location;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,15 +33,31 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
 //git test text
 //    private static final String TAG = "MainActivity"; //FireStore Constant
     FirebaseFirestore db;
     ArrayList<Vehicle> vehicleList = new ArrayList<>();
+    private static final int REQUEST_LOCATION = 1;
+    private FusedLocationProviderClient locationProviderClient;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+    double currentLat;
+    double currentLng;
+    GoogleMap googleMap;
+    private int moveMapToLocation = 1;
+
 
 //    private View.OnTouchListener onTouchListener = new com.example.somename.OnSwipeTouchListener(MainActivity.this);
 
@@ -43,10 +66,53 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+        //location gps
+
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("gps_test", "no permission");
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        } else {
+
+                locationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null){
+                            currentLat = location.getLatitude();
+                            currentLng = location.getLongitude();
+                        }
+                    }
+                });
+        }
+
+        locationRequest = createLocationRequest();
+        locationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult){
+                for (Location location : locationResult.getLocations()){
+                    LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
+                    if (moveMapToLocation == 1){
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        moveMapToLocation = 0;
+                    }
+
+                    Log.d("gps_test", "lat: " + location.getLatitude() + " ,long: " + location.getLongitude());
+                }
+            }
+
+        };
+
+
 
         //get arraylist
         Bundle extra = getIntent().getBundleExtra("extra");
@@ -57,32 +123,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+               // moveMapToLocation = 1;
                 Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
 
 
-        //test code for custom view
-//        if (vehicleList.isEmpty()) {
-//            int[] icon = new int[1];
-//            icon[0] = R.drawable.baseline_directions_car_black_18dp;
-//            // int testCarInt = findViewById(R.drawable.baseline_directions_car_black_18dp);
-//            Vehicle testCar = new Vehicle("testcar", icon[0]);
-//
-//            int[] icon2 = new int[1];
-//            icon2[0] = R.drawable.baseline_directions_car_black_18dp;
-//            Vehicle testCarTwo = new Vehicle("testcar 2", icon2[0]);
-//
-//            int[] icon3 = new int[1];
-//            icon3[0] = R.drawable.baseline_directions_car_black_18dp;
-//            Vehicle testCarThree = new Vehicle("fuck yeah", icon3[0]);
-//
-//            vehicleList.add(testCar);
-//            vehicleList.add(testCarTwo);
-//            vehicleList.add(testCarThree);
-//        }
-        //end of test code for custom view,
 
 
        //set swipe listener on activity main
@@ -123,13 +170,89 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
+
+        this.googleMap = map;
+        googleMap.setMyLocationEnabled(true);
+        googleMap.setOnMyLocationButtonClickListener(this);
+        googleMap.setOnMyLocationClickListener(this);
+//        map.addMarker(new MarkerOptions()
+//                .position(new LatLng(0, 0))
+//                .title("Marker"));
+
+
+        //map.getUiSettings().setMyLocationButtonEnabled(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        startLocationUpdates();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        stopLocationUpdates();
     }
 
 
+    private void startLocationUpdates() {
 
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null );
+        }
+
+    }
+
+
+    private void stopLocationUpdates() {
+        locationProviderClient.removeLocationUpdates(locationCallback);
+
+    }
+
+
+    LocationRequest createLocationRequest() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(7000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        return locationRequest;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if( requestCode == REQUEST_LOCATION) {
+            if( grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates();
+
+            } else {
+                //permission denied by user
+            }
+
+
+
+        }
+
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
+    }
 
 
 
