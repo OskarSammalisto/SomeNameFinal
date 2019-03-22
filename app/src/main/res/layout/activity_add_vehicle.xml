@@ -17,12 +17,12 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:src="@drawable/add_photo"
-        app:layout_constraintBottom_toTopOf="@+id/newVehicleName"
+        app:layout_constraintBottom_toTopOf="@+id/iconSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.77"
+        app:layout_constraintVertical_bias="0.625"
         tools:srcCompat="@drawable/add_photo" />
 
     <Spinner
@@ -34,17 +34,17 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="44dp"
+        app:layout_constraintBottom_toTopOf="@+id/newVehicleName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.171"
-        app:layout_constraintStart_toEndOf="@+id/newVehicleName"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.697"></Spinner>
+        app:layout_constraintVertical_bias="1.0"></Spinner>
 
     <EditText
         android:id="@+id/newVehicleName"
-        android:layout_width="192dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -59,10 +59,10 @@
         android:maxLines="1"
         app:layout_constraintBottom_toTopOf="@+id/vehicleDescription"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.379"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.943" />
+        app:layout_constraintVertical_bias="0.937" />
 
     <EditText
         android:id="@+id/vehicleDescription"
@@ -84,7 +84,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.94" />
+        app:layout_constraintVertical_bias="0.953" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/createVehicleButton"

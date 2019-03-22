@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -61,27 +62,32 @@ public class VehicleListActivity extends AppCompatActivity {
             }
         });
 
-        //test code for custom view
-
-//        int[] icon = new int[1];
-//        icon[0] = R.drawable.baseline_directions_car_black_18dp;
-//       // int testCarInt = findViewById(R.drawable.baseline_directions_car_black_18dp);
-//        Vehicle testCar = new Vehicle("testcar", icon[0]);
-//
-//        int[] icon2 = new int[1];
-//        icon2[0] = R.drawable.baseline_directions_car_black_18dp;
-//        Vehicle testCarTwo = new Vehicle("testcar 2", icon2[0]);
-//
-//        vehicleList.add(testCar);
-//        vehicleList.add(testCarTwo);
-        //end of test code for custom view,
 
         ListView vehicleListView = findViewById(R.id.vehicleListView);
-
 
         VehicleListAdapter vehicleListAdapter = new VehicleListAdapter(this, vehicleList);
 
         vehicleListView.setAdapter(vehicleListAdapter);
+
+
+        //listers to clicks on listView. int position is arrayList index.
+        vehicleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(VehicleListActivity.this, "clicked row " +position, Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(VehicleListActivity.this, VehicleInfoActivity.class);
+                Bundle extra = new Bundle();
+                extra.putSerializable("vehicleList", vehicleList);
+                intent.putExtra("extra", extra);
+                intent.putExtra("vehicle", position);
+                startActivity(intent);
+
+
+            }
+        });
+
+
 //
 
         //Swipe back to main screen,

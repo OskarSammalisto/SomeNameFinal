@@ -1,6 +1,7 @@
 package com.example.somename;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,14 +12,15 @@ public class Vehicle implements Serializable {
     private int logo;
     private ArrayList images;
     private String description;
-    private Bitmap bitmapLogo;
+    private String uri;
 
 
-    public Vehicle(String name, String description, int logo) {
+    public Vehicle(String name, String description, int logo, String uri) {
         this.name = name;
         this.logo = logo;
         this.description = description;
-//        this.bitmapLogo = bitmapLogo;
+        this.uri = uri;
+
     }
 
     public String getName() {
@@ -53,11 +55,11 @@ public class Vehicle implements Serializable {
         this.description = description;
     }
 
-    public Bitmap getBitmapLogo() {
-        return bitmapLogo;
+    public String getUri() {
+        return uri;
     }
 
-    public void setBitmapLogo(Bitmap bitmapLogo) {
-        this.bitmapLogo = bitmapLogo;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

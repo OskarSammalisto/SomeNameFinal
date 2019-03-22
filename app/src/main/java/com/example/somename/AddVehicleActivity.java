@@ -14,10 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class AddVehicleActivity extends AppCompatActivity {
@@ -51,6 +54,8 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     private EditText newVehicleDescription;
     private FloatingActionButton confirmButton;
     private Spinner spinner;
+    private TextView vehicleSpinnerText;
+    private ImageView vehicleLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +70,18 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
         newVehicleDescription = findViewById(R.id.vehicleDescription);
         confirmButton = findViewById(R.id.createVehicleButton);
         spinner = findViewById(R.id.iconSpinner);
+        vehicleSpinnerText = findViewById(R.id.vehicleText);
+        vehicleLogo = findViewById(R.id.vehicleIcon);
 
 
-        //try to populate spinner with icons
-//        ArrayAdapter<Integer> adapter = ArrayAdapter.createFromResource(this, R.array.icons_spinner, R.layout.support_simple_spinner_dropdown_item);
-//        spinner.setAdapter(adapter);
+        //populate spinner with text
+//
+        ArrayAdapter<String> iconSpinnerAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.vehicle_spinner_icons));
+        spinner.setAdapter(iconSpinnerAdapter);
+
+
+//
+//
 
 
         //get arraylist
@@ -88,19 +100,33 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
             }
         });
 
-        //create new vehicle and go back to vehicleListActivity. Will need error handlers!!!!!!
+                                                                                                      //create new vehicle and go back to vehicleListActivity. Will need error handlers!!!!!!
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //replace with actual icon selection and add description
-                int[] icon2 = new int[1];
-                icon2[0] = R.drawable.baseline_directions_car_black_18dp;
+
+
+                int vehicleType = spinner.getSelectedItemPosition();
+                int vehicleLogo = 0;
+                switch (vehicleType) {
+                    case 0:
+                        vehicleLogo = R.drawable.baseline_directions_car_black_18dp;
+                        break;
+                    case 1:
+                        vehicleLogo = R.drawable.baseline_directions_bike_black_18dp;
+                        break;
+                    case 2:
+                        vehicleLogo = R.drawable.baseline_directions_boat_black_18dp;
+                        break;
+                }
 
 //                String filePath = photoFile.getPath();  //this code crashes program as is!!!
 //                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
 
-
-                Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(),  icon2[0]);
+               Uri uri = Uri.fromFile(photoFile);
+                String uriString = uri.toString();
+                                                                                                                    //make custom name for vehicle variable!!!!!
+                Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(),  vehicleLogo, uriString);
                 vehicleList.add(vehicle);
 
                 Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
