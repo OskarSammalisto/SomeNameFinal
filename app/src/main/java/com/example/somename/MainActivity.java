@@ -4,6 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +19,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -40,6 +44,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
                     if (moveMapToLocation == 1){
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                      // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         moveMapToLocation = 0;
                     }
 
@@ -119,15 +125,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (extra != null) {
             vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
         }
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               // moveMapToLocation = 1;
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//               // moveMapToLocation = 1;
+//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
 
 
@@ -162,6 +169,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+        //fill card with vehicle
+        if (vehicleList != null && !vehicleList.isEmpty()) {
+            ImageView vehicleCardPic = findViewById(R.id.cardVehicleImage);
+            TextView vehicleCardName = findViewById(R.id.cardVehicleName);
+            TextView vehicleCardDesc = findViewById(R.id.cardVehicleDescription);
+
+            vehicleCardName.setText(vehicleList.get(0).getName());
+            vehicleCardDesc.setText(vehicleList.get(0).getDescription());
+
+            Bitmap bitmap;
+
+            Uri uri = Uri.parse(vehicleList.get(0).getUri());
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                vehicleCardPic.setImageBitmap(bitmap);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
 
 
 
@@ -180,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                .title("Marker"));
 
 
-        //map.getUiSettings().setMyLocationButtonEnabled(true);
+
     }
 
     @Override

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">SomeName</string>
     <string name="title_activity_maps">Map</string>
+    <string name="name">name</string>
+    <string name="description">description</string>
     <string-array name="vehicle_spinner_icons">
         <item>Car</item>
         <item>Bike</item>

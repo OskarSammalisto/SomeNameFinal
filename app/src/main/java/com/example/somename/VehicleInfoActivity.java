@@ -29,10 +29,13 @@ public class VehicleInfoActivity extends AppCompatActivity {
         vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
         vehicle = getIntent().getIntExtra("vehicle", 0);
 
-        TextView textView = findViewById(R.id.testText);
-        textView.setText("you selected vehicle nr: " +vehicle);
+        TextView vehicleName = findViewById(R.id.vehicleName);
+        vehicleName.setText(vehicleList.get(vehicle).getName());
 
-        ImageView imageView = findViewById(R.id.testImage);
+        TextView vehicleDescription = findViewById(R.id.vehicleDescription);
+        vehicleDescription.setText(vehicleList.get(vehicle).getDescription());
+
+        ImageView imageView = findViewById(R.id.vehicleImage);
 
 
 

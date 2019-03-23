@@ -23,7 +23,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.625"
-        tools:srcCompat="@drawable/add_photo" />
+        tools:srcCompat="@drawable/add_photo"
+        tools:ignore="ContentDescription" />
 
     <Spinner
         android:id="@+id/iconSpinner"
@@ -40,7 +41,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"></Spinner>
+        app:layout_constraintVertical_bias="1.0"/>
 
     <EditText
         android:id="@+id/newVehicleName"
@@ -52,10 +53,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:hint="name"
+        android:hint="@string/name"
         android:imeOptions="actionNext"
         android:inputType="textCapSentences|text"
-        android:maxLength="20"
+        android:maxLength="18"
         android:maxLines="1"
         app:layout_constraintBottom_toTopOf="@+id/vehicleDescription"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +75,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:hint="description"
+        android:hint="@string/description"
         android:inputType="textCapSentences|text"
         android:maxLength="100"
         android:maxLines="1"
@@ -97,6 +98,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

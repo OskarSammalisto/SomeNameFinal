@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="MainActivity"
-    android:id="@+id/activityMain">
+    android:id="@+id/activityMain"
+    android:background="@android:color/darker_gray">
 
 
 
@@ -30,28 +31,59 @@
 
     </fragment>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/baseline_directions_car_black_18dp"
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/map" />
+        tools:layout_editor_absoluteX="344dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_blue_light">
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="35dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="80dp"
+            android:background="@android:color/holo_blue_dark">
 
 
+            <ImageView
+                android:id="@+id/cardVehicleImage"
+                android:layout_width="120dp"
+                android:layout_height="match_parent" />
 
+            <TextView
+                android:id="@+id/cardVehicleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/cardVehicleImage"
+                android:paddingLeft="50dp"
+                android:text="Name Of Vehicle"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-
+            <TextView
+                android:id="@+id/cardVehicleDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardVehicleName"
+                android:layout_toEndOf="@id/cardVehicleImage"
+                android:paddingLeft="50dp"
+                android:paddingTop="25dp"
+                android:text="Description of the vehicle goes here goes here" />
+        </RelativeLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 
 </android.support.constraint.ConstraintLayout>
