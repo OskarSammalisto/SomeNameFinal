@@ -85,6 +85,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //get arraylist
+        Bundle extra = getIntent().getBundleExtra("extra");
+        if (extra != null) {
+            vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+        }
+
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -195,11 +201,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         };
 
 
-        //get arraylist
-        Bundle extra = getIntent().getBundleExtra("extra");
-        if (extra != null) {
-            vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
-        }
+
 
 //        FloatingActionButton fab = findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
