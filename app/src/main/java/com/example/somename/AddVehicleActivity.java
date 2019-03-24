@@ -124,7 +124,8 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     Uri uri = Uri.fromFile(photoFile);
                     String uriString = uri.toString();
 
-                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uriString);
+                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString());
+                    vehicle.setUri(uriString);
                     vehicleList.add(vehicle);
 
                     Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
@@ -133,16 +134,16 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     extra.putSerializable("vehicleList", vehicleList);
                     intent.putExtra("extra", extra);
 
-                    //send image to firebase cloud storage
+                    //send image to fireBase cloud storage
                     sendImageToCloud(photoFile);
 
                     //send object to fireStore
-                    Map<String, Object> user = new HashMap<>();
-                    user.put("name", vehicle.getName());
-                    user.put("description", vehicle.getDescription());
-                    user.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!! 
+                    Map<String, Object> vehiclesHashMap = new HashMap<>();
+                    vehiclesHashMap.put("name", vehicle.getName());
+                    vehiclesHashMap.put("description", vehicle.getDescription());
+                    //vehiclesHashMap.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!!
 
-                    db.collection("users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    db.collection("vehicles").add(vehiclesHashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
@@ -238,7 +239,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     }
 
 
-    //upload photo to firebase storageCloud, works. Is currently open without authentication.
+    //upload photo to fireBase storageCloud, works. Is currently open without authentication.
     private void sendImageToCloud(File image) {
         Uri file = Uri.fromFile(image);
         StorageReference riversRef = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg");

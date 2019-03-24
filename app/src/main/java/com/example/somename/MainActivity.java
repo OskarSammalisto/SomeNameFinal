@@ -32,9 +32,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,7 +46,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +59,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
-//git test text
+    //git test text
 //    private static final String TAG = "MainActivity"; //FireStore Constant
     FirebaseFirestore db;
     ArrayList<Vehicle> vehicleList = new ArrayList<>();
@@ -63,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     double currentLng;
     GoogleMap googleMap;
     private int moveMapToLocation = 1;
+    private static final String TAG = "MainActivity";
+    private StorageReference mStorageRef;
 
 
 //    private View.OnTouchListener onTouchListener = new com.example.somename.OnSwipeTouchListener(MainActivity.this);
@@ -79,6 +89,72 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
+        //retrieve from fireStore
+
+        if (vehicleList.isEmpty()) {
+            db.collection("vehicles").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
+                            vehicleList.add(vehicle);
+                            Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
+                            String uriString = uri.toString();
+                            vehicle.setUri(uriString);
+
+
+                            //get image from cloud and set uri
+
+//                            try {
+//
+//                                StorageReference vehicleImageRef = mStorageRef.child("images/" + vehicle.getName() + ".jpg");
+//                                final File localFile = File.createTempFile("images", ".jpg");
+//                                vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                                    @Override
+//                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                                        Uri uri = Uri.fromFile(localFile);
+//                                        String uriString = uri.toString();
+//                                        vehicle.setUri(uriString);
+//                                    }
+//                                }).addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
+//                                        String uriString = uri.toString();
+//                                        vehicle.setUri(uriString);
+//                                    }
+//                                });
+//
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+                        }
+
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                }
+            });
+
+
+
+        }
+
+//        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Log.d(TAG, document.getId() + " => " + document.getData());
+//                    }
+//                } else {
+//                    Log.w(TAG, "Error getting documents.", task.getException());
+//                }
+//            }drawable/baseline_directions_car_black_18dp.png
+//        });
+
+
         //location gps
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -89,26 +165,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         } else {
 
-                locationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null){
-                            currentLat = location.getLatitude();
-                            currentLng = location.getLongitude();
-                        }
+            locationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        currentLat = location.getLatitude();
+                        currentLng = location.getLongitude();
                     }
-                });
+                }
+            });
         }
 
         locationRequest = createLocationRequest();
-        locationCallback = new LocationCallback(){
+        locationCallback = new LocationCallback() {
             @Override
-            public void onLocationResult(LocationResult locationResult){
-                for (Location location : locationResult.getLocations()){
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
                     LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
-                    if (moveMapToLocation == 1){
-                      // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    if (moveMapToLocation == 1) {
+                        // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         moveMapToLocation = 0;
                     }
 
@@ -117,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         };
-
 
 
         //get arraylist
@@ -137,15 +212,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        });
 
 
-
-
-       //set swipe listener on activity main
+        //set swipe listener on activity main
         ConstraintLayout layout = findViewById(R.id.activityMain);
 
         layout.setOnTouchListener(new com.example.somename.OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeTop() {
                 Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
             }
+
             public void onSwipeRight() {
                 Intent intent = new Intent(MainActivity.this, VehicleListActivity.class);
                 //intent.putExtra("vehicleList", vehicleList);
@@ -155,18 +229,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-               // Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
+
             public void onSwipeLeft() {
                 Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
+
             public void onSwipeBottom() {
                 Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
             }
 
         });
-
-
 
 
         //fill card with vehicle
@@ -195,8 +269,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-
-
     }
 
 
@@ -204,6 +276,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap map) {
 
         this.googleMap = map;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnMyLocationButtonClickListener(this);
         googleMap.setOnMyLocationClickListener(this);

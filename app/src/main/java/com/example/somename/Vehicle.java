@@ -14,10 +14,12 @@ public class Vehicle implements Serializable {
     private String uri;
 
 
-    public Vehicle(String name, String description, String uri) {
+    public Vehicle(){}
+
+    public Vehicle(String name, String description) {
         this.name = name;
         this.description = description;
-        this.uri = uri;
+       // this.uri = uri;
 
     }
 
