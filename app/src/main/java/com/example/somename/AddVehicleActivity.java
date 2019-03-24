@@ -140,7 +140,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     Map<String, Object> user = new HashMap<>();
                     user.put("name", vehicle.getName());
                     user.put("description", vehicle.getDescription());
-                    user.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!!
+                    user.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!! Also nothing is sent yet.
 
 
                     startActivity(intent);
