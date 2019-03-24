@@ -140,7 +140,21 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     Map<String, Object> user = new HashMap<>();
                     user.put("name", vehicle.getName());
                     user.put("description", vehicle.getDescription());
-                    user.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!! Also nothing is sent yet.
+                    user.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!! 
+
+                    db.collection("users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                        }
+                    });
+
 
 
                     startActivity(intent);
