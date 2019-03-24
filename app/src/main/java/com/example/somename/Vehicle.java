@@ -9,15 +9,13 @@ import java.util.ArrayList;
 public class Vehicle implements Serializable {
 //ss
     private String name;
-    private int logo;
     private ArrayList images;
     private String description;
     private String uri;
 
 
-    public Vehicle(String name, String description, int logo, String uri) {
+    public Vehicle(String name, String description, String uri) {
         this.name = name;
-        this.logo = logo;
         this.description = description;
         this.uri = uri;
 
@@ -31,13 +29,6 @@ public class Vehicle implements Serializable {
         this.name = name;
     }
 
-    public int getLogo() {
-        return logo;
-    }
-
-    public void setLogo(int logo) {
-        this.logo = logo;
-    }
 
     public ArrayList getImages() {
         return images;

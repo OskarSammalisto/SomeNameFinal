@@ -73,6 +73,8 @@ public class VehicleListAdapter extends ArrayAdapter<String> {
 
 
 
+
+
         return vehicleList;
 
     }

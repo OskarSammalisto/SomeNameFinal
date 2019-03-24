@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddVehicleActivity extends AppCompatActivity {
 //s
@@ -53,9 +57,9 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     private EditText newVehicleName;
     private EditText newVehicleDescription;
     private FloatingActionButton confirmButton;
-    private Spinner spinner;
-    private TextView vehicleSpinnerText;
-    private ImageView vehicleLogo;
+//    private Spinner spinner;
+//    private TextView vehicleSpinnerText;
+//    private ImageView vehicleLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,22 +73,22 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
         newVehicleName = findViewById(R.id.newVehicleName);
         newVehicleDescription = findViewById(R.id.vehicleDescription);
         confirmButton = findViewById(R.id.createVehicleButton);
-        spinner = findViewById(R.id.iconSpinner);
-        vehicleSpinnerText = findViewById(R.id.vehicleText);
-        vehicleLogo = findViewById(R.id.vehicleIcon);
+//        spinner = findViewById(R.id.iconSpinner);
+//        vehicleSpinnerText = findViewById(R.id.vehicleText);
+//        vehicleLogo = findViewById(R.id.vehicleIcon);
 
 
-        //populate spinner with text
+//        //populate spinner with text
+////
+//        ArrayAdapter<String> iconSpinnerAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.vehicle_spinner_icons));
+//        spinner.setAdapter(iconSpinnerAdapter);
+
+
 //
-        ArrayAdapter<String> iconSpinnerAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.vehicle_spinner_icons));
-        spinner.setAdapter(iconSpinnerAdapter);
-
-
-//
 //
 
 
-        //get arraylist
+        //get arrayList
         Bundle extra = getIntent().getBundleExtra("extra");
         vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
 
@@ -100,42 +104,47 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
             }
         });
 
-                                                                                                      //create new vehicle and go back to vehicleListActivity. Will need error handlers!!!!!!
+        //create new vehicle and go back to vehicleListActivity.
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                int vehicleType = spinner.getSelectedItemPosition();
-                int vehicleLogo = 0;
-                switch (vehicleType) {
-                    case 0:
-                        vehicleLogo = R.drawable.baseline_directions_car_black_18dp;
-                        break;
-                    case 1:
-                        vehicleLogo = R.drawable.baseline_directions_bike_black_18dp;
-                        break;
-                    case 2:
-                        vehicleLogo = R.drawable.baseline_directions_boat_black_18dp;
-                        break;
+                //check if all fields are filled, and pick is taken
+                if (photoFile == null || newVehicleName.getText().toString().length() == 0 || newVehicleDescription.getText().toString().length() == 0){
+
+                    Toast.makeText(AddVehicleActivity.this, "You must fill in name, description and take a pic", Toast.LENGTH_SHORT).show();
                 }
 
-//                String filePath = photoFile.getPath();  //this code crashes program as is!!!
-//                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                //make function that checks if vehicle with same name exists
 
-               Uri uri = Uri.fromFile(photoFile);
-                String uriString = uri.toString();
-                                                                                                                    //make custom name for vehicle variable!!!!!
-                Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(),  vehicleLogo, uriString);
-                vehicleList.add(vehicle);
 
-                Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
+                //creates vehicle and goes back to vehicleListActivity.
+                else {
+                    Uri uri = Uri.fromFile(photoFile);
+                    String uriString = uri.toString();
 
-                Bundle extra = new Bundle();
-                extra.putSerializable("vehicleList", vehicleList);
-                intent.putExtra("extra", extra);
+                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uriString);
+                    vehicleList.add(vehicle);
 
-                startActivity(intent);
+                    Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
+
+                    Bundle extra = new Bundle();
+                    extra.putSerializable("vehicleList", vehicleList);
+                    intent.putExtra("extra", extra);
+
+                    //send image to firebase cloud storage
+                    sendImageToCloud(photoFile);
+
+                    //send object to fireStore
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("name", vehicle.getName());
+                    user.put("description", vehicle.getDescription());
+                    user.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!!
+
+
+                    startActivity(intent);
+                }
 
             }
         });
@@ -183,19 +192,14 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 imageViewNewCarPicture.setImageBitmap(bitmap);
-                //send image to firebase cloud storage
-                sendImageToCloud(photoFile);
+//                //send image to firebase cloud storage
+//                sendImageToCloud(photoFile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-
-           // imageViewNewCarPicture.setImageBitmap(bitmap);
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            imageViewNewCarPicture.setImageBitmap(imageBitmap);
 
         }
     }
@@ -220,34 +224,10 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     }
 
 
-    //does not work, crashes activity. not the way to upload a photo.
-    private void sendToFirestore(File photoFile) {
-
-        db.collection("users")
-                .add(photoFile)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-
-
-
-
-
-    }
-
     //upload photo to firebase storageCloud, works. Is currently open without authentication.
     private void sendImageToCloud(File image) {
         Uri file = Uri.fromFile(image);
-        StorageReference riversRef = mStorageRef.child("images/rivers2.jpg");
+        StorageReference riversRef = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg");
 
         riversRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

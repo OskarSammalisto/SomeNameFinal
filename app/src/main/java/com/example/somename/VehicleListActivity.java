@@ -70,6 +70,8 @@ public class VehicleListActivity extends AppCompatActivity {
         vehicleListView.setAdapter(vehicleListAdapter);
 
 
+
+
         //listers to clicks on listView. int position is arrayList index.
         vehicleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
