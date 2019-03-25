@@ -91,8 +91,10 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
 
         //get arrayList
-        Bundle extra = getIntent().getBundleExtra("extra");
-        vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+//        Bundle extra = getIntent().getBundleExtra("extra");
+//        vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+
+        vehicleList = this.getIntent().getParcelableArrayListExtra("arrayListPars");
 
         ImageView imageViewNewCarPictureButton = findViewById(R.id.imageViewNewCarPicture);
 
@@ -130,7 +132,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
 
 
-                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString());
+                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uri);
                     vehicle.setUri(uriString);
                    // vehicle.setLatLng(latLng);
                     vehicleList.add(vehicle);
@@ -141,9 +143,11 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
                     Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
 
-                    Bundle extra = new Bundle();
-                    extra.putSerializable("vehicleList", vehicleList);
-                    intent.putExtra("extra", extra);
+//                    Bundle extra = new Bundle();
+//                    extra.putSerializable("vehicleList", vehicleList);
+//                    intent.putExtra("extra", extra);
+
+                    intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
                     //send image to fireBase cloud storage
                   //  sendImageToCloud(photoFile);

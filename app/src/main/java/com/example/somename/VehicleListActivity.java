@@ -43,8 +43,10 @@ public class VehicleListActivity extends AppCompatActivity {
 
 
         //get arraylist
-        Bundle extra = getIntent().getBundleExtra("extra");
-        vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+       // Bundle extra = getIntent().getBundleExtra("extra");
+        //vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+
+        vehicleList = this.getIntent().getParcelableArrayListExtra("arrayListPars");
 
 
         FloatingActionButton fab = findViewById(R.id.fabAddVehicle);
@@ -54,10 +56,15 @@ public class VehicleListActivity extends AppCompatActivity {
 //                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 Intent intent = new Intent(VehicleListActivity.this, AddVehicleActivity.class);
-                Bundle extra = new Bundle();
-                extra.putSerializable("vehicleList", vehicleList);
-                intent.putExtra("extra", extra);
+
+//                Bundle extra = new Bundle();
+//                extra.putSerializable("vehicleList", vehicleList);
+//                intent.putExtra("extra", extra);
+
+                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
+
                 startActivity(intent);
+
 
 
             }
@@ -80,9 +87,13 @@ public class VehicleListActivity extends AppCompatActivity {
                 //Toast.makeText(VehicleListActivity.this, "clicked row " +position, Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(VehicleListActivity.this, VehicleInfoActivity.class);
-                Bundle extra = new Bundle();
-                extra.putSerializable("vehicleList", vehicleList);
-                intent.putExtra("extra", extra);
+
+//                Bundle extra = new Bundle();
+//                extra.putSerializable("vehicleList", vehicleList);
+//                intent.putExtra("extra", extra);
+
+                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
+
                 intent.putExtra("vehicle", position);
                 startActivity(intent);
 
@@ -111,9 +122,12 @@ public class VehicleListActivity extends AppCompatActivity {
             public void onSwipeLeft() {
 
                 Intent intent = new Intent(VehicleListActivity.this, MainActivity.class);
-                Bundle extra = new Bundle();
-                extra.putSerializable("vehicleList", vehicleList);
-                intent.putExtra("extra", extra);
+//                Bundle extra = new Bundle();
+//                extra.putSerializable("vehicleList", vehicleList);
+//                intent.putExtra("extra", extra);
+
+                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
+
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
 

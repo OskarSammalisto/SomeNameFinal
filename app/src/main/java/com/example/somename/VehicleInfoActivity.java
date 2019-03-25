@@ -39,8 +39,11 @@ public class VehicleInfoActivity extends AppCompatActivity {
         deleteVehicleFab = findViewById(R.id.deleteVehicle);
 
         //get arrayList
-        Bundle extra = getIntent().getBundleExtra("extra");
-        vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+//        Bundle extra = getIntent().getBundleExtra("extra");
+//        vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+
+        vehicleList = this.getIntent().getParcelableArrayListExtra("arrayListPars");
+
         //get selected vehicle by arrayList position
         vehicle = getIntent().getIntExtra("vehicle", 0);
 
@@ -58,16 +61,20 @@ public class VehicleInfoActivity extends AppCompatActivity {
 
         Bitmap bitmap;
         uriString = vehicleList.get(vehicle).getUri();
-        uri = Uri.parse(uriString);
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            imageView.setImageBitmap(bitmap);
+        uri = vehicleList.get(vehicle).getUriReal();
+        if (uri != null) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                imageView.setImageBitmap(bitmap);
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
+
 
         deleteVehicleFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,9 +93,13 @@ public class VehicleInfoActivity extends AppCompatActivity {
 
                                 vehicleList.remove(vehicle);
                                 Intent intent = new Intent(VehicleInfoActivity.this, VehicleListActivity.class);
-                                Bundle extra = new Bundle();
-                                extra.putSerializable("vehicleList", vehicleList);
-                                intent.putExtra("extra", extra);
+
+//                                Bundle extra = new Bundle();
+//                                extra.putSerializable("vehicleList", vehicleList);
+//                                intent.putExtra("extra", extra);
+
+                                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
+
                                 startActivity(intent);
 
 

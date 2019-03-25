@@ -57,16 +57,20 @@ public class VehicleListAdapter extends ArrayAdapter<String> {
         //vehicleLogo.setImageResource(currentVehicle.getLogo());
 
         Bitmap bitmap;
-        uri = Uri.parse(currentVehicle.getUri());
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-            vehicleLogo.setImageBitmap(bitmap);
+        uri = currentVehicle.getUriReal();
+        if (uri != null) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                vehicleLogo.setImageBitmap(bitmap);
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
+
 
 
 

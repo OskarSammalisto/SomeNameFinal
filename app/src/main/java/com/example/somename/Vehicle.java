@@ -2,6 +2,8 @@ package com.example.somename;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.CollectionReference;
@@ -9,13 +11,15 @@ import com.google.firebase.firestore.CollectionReference;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Vehicle implements Serializable {
+public class Vehicle implements Serializable, Parcelable {
 //ss
     private String name;
-    private ArrayList images;
     private String description;
-    private String uri;
+    private Uri uriReal;
     private LatLng latLng;
+
+    private ArrayList images;
+    private String uriString;
     private String[] stringLatLng;
 
     public String getVehiclesRef() {
@@ -32,9 +36,10 @@ public class Vehicle implements Serializable {
 
     public Vehicle(){}
 
-    public Vehicle(String name, String description) {
+    public Vehicle(String name, String description, Uri uri) {
         this.name = name;
         this.description = description;
+        this.uriReal = uri;
 
        // this.uri = uri;
 
@@ -66,11 +71,19 @@ public class Vehicle implements Serializable {
     }
 
     public String getUri() {
-        return uri;
+        return uriString;
     }
 
     public void setUri(String uri) {
-        this.uri = uri;
+        this.uriString = uri;
+    }
+
+    public Uri getUriReal() {
+        return uriReal;
+    }
+
+    public void setUriReal(Uri uriReal) {
+        this.uriReal = uriReal;
     }
 
     public LatLng getLatLng() {
@@ -95,4 +108,37 @@ public class Vehicle implements Serializable {
     public void setStringLatLng(String[] stringLatLng) {
         this.stringLatLng = stringLatLng;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeValue(uriReal);
+        dest.writeValue(latLng);
+    }
+
+    public static final Parcelable.Creator<Vehicle> CREATOR
+            = new Parcelable.Creator<Vehicle>() {
+        public Vehicle createFromParcel(Parcel in) {
+            return new Vehicle(in);
+        }
+
+        public Vehicle[] newArray(int size) {
+            return new Vehicle[size];
+        }
+    };
+
+    private Vehicle(Parcel in) {
+      //  mData = in.readInt();
+        name = in.readString();
+        description = in.readString();
+        uriReal = (Uri) in.readValue(Uri.class.getClassLoader());
+        latLng = (LatLng) in.readValue(LatLng.class.getClassLoader());
+    }
+
 }

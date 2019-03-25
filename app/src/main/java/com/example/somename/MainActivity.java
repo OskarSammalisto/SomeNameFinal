@@ -91,10 +91,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         //get arraylist
-        Bundle extra = getIntent().getBundleExtra("extra");
-        if (extra != null) {
-            vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+       // Bundle extra = getIntent().getBundleExtra("extra");
+
+//        if (extra != null) {
+//            vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+//        }
+
+
+        ArrayList<Vehicle> tempVehicleList = this.getIntent().getParcelableArrayListExtra("arrayListPars");
+
+        if (tempVehicleList != null) {
+            vehicleList = tempVehicleList;
+
         }
+        //vehicleList = this.getIntent().getParcelableArrayListExtra("arrayListPars");
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -244,10 +254,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             public void onSwipeRight() {
                 Intent intent = new Intent(MainActivity.this, VehicleListActivity.class);
-                //intent.putExtra("vehicleList", vehicleList);
-                Bundle extra = new Bundle();
-                extra.putSerializable("vehicleList", vehicleList);
-                intent.putExtra("extra", extra);
+
+//                //intent.putExtra("vehicleList", vehicleList);
+//                Bundle extra = new Bundle();
+//                extra.putSerializable("vehicleList", vehicleList);
+//                intent.putExtra("extra", extra);
+
+                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -334,16 +347,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Bitmap bitmap;
 
-        Uri uri = Uri.parse(vehicleList.get(currentVehiclePosition).getUri());
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            vehicleCardPic.setImageBitmap(bitmap);
+        Uri uri = vehicleList.get(currentVehiclePosition).getUriReal();
+        if (uri != null) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                vehicleCardPic.setImageBitmap(bitmap);
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
+
 
 
 
