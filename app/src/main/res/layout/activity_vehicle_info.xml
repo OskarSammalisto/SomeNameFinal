@@ -84,6 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/baseline_delete_forever_black_18dp"/>
 
 </RelativeLayout>

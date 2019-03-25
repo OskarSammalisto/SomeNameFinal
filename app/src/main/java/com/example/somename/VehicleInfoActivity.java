@@ -1,10 +1,12 @@
 package com.example.somename;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -71,17 +73,31 @@ public class VehicleInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
+                new AlertDialog.Builder(VehicleInfoActivity.this)
+                        .setMessage("Delete?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                db.collection("vehicles").document(vehicleList.get(vehicle).getName()).delete();
+                                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
+
+                                db.collection("vehicles").document(vehicleList.get(vehicle).getName()).delete();
 
 
-                vehicleList.remove(vehicle);
-                Intent intent = new Intent(VehicleInfoActivity.this, VehicleListActivity.class);
-                Bundle extra = new Bundle();
-                extra.putSerializable("vehicleList", vehicleList);
-                intent.putExtra("extra", extra);
-                startActivity(intent);
+                                vehicleList.remove(vehicle);
+                                Intent intent = new Intent(VehicleInfoActivity.this, VehicleListActivity.class);
+                                Bundle extra = new Bundle();
+                                extra.putSerializable("vehicleList", vehicleList);
+                                intent.putExtra("extra", extra);
+                                startActivity(intent);
+
+
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+
+
 
 
 

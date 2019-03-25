@@ -41,6 +41,7 @@ public class VehicleListActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
 
+
         //get arraylist
         Bundle extra = getIntent().getBundleExtra("extra");
         vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
@@ -151,5 +152,9 @@ public class VehicleListActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed(){
+
+    }
 
 }
