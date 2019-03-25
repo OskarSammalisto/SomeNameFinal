@@ -20,6 +20,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.GestureDetector;
@@ -74,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int moveMapToLocation = 1;
     private static final String TAG = "MainActivity";
     private StorageReference mStorageRef;
+    private int currentVehiclePosition = 0;
+    private LatLng emptyLatLng = new LatLng(0.0,0.0);
+
 
 
 //    private View.OnTouchListener onTouchListener = new com.example.somename.OnSwipeTouchListener(MainActivity.this);
@@ -260,101 +264,157 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         });
 
+        RelativeLayout mainActivityDisplayVehicle = findViewById(R.id.mainActivityCurrentVehicle);
 
-        //fill card with vehicle
-        if (vehicleList != null && !vehicleList.isEmpty()) {
-            ImageView vehicleCardPic = findViewById(R.id.cardVehicleImage);
-            TextView vehicleCardName = findViewById(R.id.cardVehicleName);
-            TextView vehicleCardDesc = findViewById(R.id.cardVehicleDescription);
+        mainActivityDisplayVehicle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!vehicleList.isEmpty()){
 
-            vehicleCardName.setText(vehicleList.get(0).getName());
-            vehicleCardDesc.setText(vehicleList.get(0).getDescription());
 
-            Bitmap bitmap;
+                    locationCallback = new LocationCallback() {
+                        @Override
+                        public void onLocationResult(LocationResult locationResult) {
+                            for (Location location : locationResult.getLocations()) {
 
-            Uri uri = Uri.parse(vehicleList.get(0).getUri());
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                vehicleCardPic.setImageBitmap(bitmap);
+                                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                vehicleList.get(currentVehiclePosition).setLatLng(myLatLng);
+//
+//                               googleMap.addMarker(new MarkerOptions().position(vehicleList.get(currentVehiclePosition).getLatLng()).title(vehicleList.get(currentVehiclePosition).getName()));
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                                Log.d("gps_test", "lat: " + location.getLatitude() + " ,long: " + location.getLongitude());
+                            }
+                        }
+
+                    };
+
+                    //make vehicle display complete first
+                    Toast.makeText(MainActivity.this, "haven't made this yet", Toast.LENGTH_SHORT).show();
+
+                }
             }
+        });
 
+        FloatingActionButton cycleVehiclesButton = findViewById(R.id.fabCycleVehicles);
+
+        cycleVehiclesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (vehicleList != null && !vehicleList.isEmpty()){
+
+                    currentVehiclePosition ++;
+                    if (currentVehiclePosition >= vehicleList.size()){
+                        currentVehiclePosition = 0;
+                    }
+                    setVehicleDisplay();
+
+                }
+
+            }
+        });
+
+
+                                                                                  //fill card with vehicle, too slow when getting from fireStore!!!! doesn't display first time!!!!!!!
+        if (vehicleList != null && !vehicleList.isEmpty()) {
+            setVehicleDisplay();
 
         }
 
 
     }
 
-    public void downloadImageAndSetUri(ArrayList<Vehicle> vehicleList){
-        final ArrayList<String> tempNameList = new ArrayList<>();
-        final ArrayList<String> tempUriList = new ArrayList<>();
+    public void setVehicleDisplay(){
 
+        ImageView vehicleCardPic = findViewById(R.id.cardVehicleImage);
+        TextView vehicleCardName = findViewById(R.id.cardVehicleName);
+        TextView vehicleCardDesc = findViewById(R.id.cardVehicleDescription);
 
+        vehicleCardName.setText(vehicleList.get(currentVehiclePosition).getName());
+        vehicleCardDesc.setText(vehicleList.get(currentVehiclePosition).getDescription());
 
+        Bitmap bitmap;
+
+        Uri uri = Uri.parse(vehicleList.get(currentVehiclePosition).getUri());
         try {
-                    for (Vehicle  vehicle : vehicleList) {
-                        final Vehicle currentVehicle = vehicle;
-                        StorageReference vehicleImageRef = mStorageRef.child("images/" + vehicle.getName() + ".jpg");
-                        final File localFile = File.createTempFile("images", ".jpg");
-                        vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            vehicleCardPic.setImageBitmap(bitmap);
 
-                                Uri uri = Uri.fromFile(localFile);
-                                String uriString = uri.toString();
-                                currentVehicle.setUri(uriString);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
-                                String uriString = uri.toString();
-                                currentVehicle.setUri(uriString);
-                            }
-                        });
-                    }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+
+
+    }
+
+//    public void downloadImageAndSetUri(ArrayList<Vehicle> vehicleList){
+//        final ArrayList<String> tempNameList = new ArrayList<>();
+//        final ArrayList<String> tempUriList = new ArrayList<>();
+//
+//
+//
 //        try {
-//                      for (Vehicle vehicle : vehicleList){
-//                            String name = vehicle.getName();
-//                            tempNameList.add(name);
-//                      }
+//                    for (Vehicle  vehicle : vehicleList) {
+//                        final Vehicle currentVehicle = vehicle;
+//                        StorageReference vehicleImageRef = mStorageRef.child("images/" + vehicle.getName() + ".jpg");
+//                        final File localFile = File.createTempFile("images", ".jpg");
+//                        vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                            @Override
+//                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
 //
-//                      for (String name : tempNameList){
-//                          StorageReference vehicleImageRef = mStorageRef.child("images/" + name + ".jpg");
-//                          final File localFile = File.createTempFile("images", ".jpg");
-//                          vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                              @Override
-//                              public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                                  Uri uri = Uri.fromFile(localFile);
-//                                  String uriString = uri.toString();
-//                                 tempUriList.add(uriString);
-//                              }
-//                          }).addOnFailureListener(new OnFailureListener() {
-//                              @Override
-//                              public void onFailure(@NonNull Exception e) {
-//                                  Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
-//                                  String uriString = uri.toString();
-//                                  tempUriList.add(uriString);
-//                              }
-//                          });
-//
-//
-//
-//                      }
+//                                Uri uri = Uri.fromFile(localFile);
+//                                String uriString = uri.toString();
+//                                currentVehicle.setUri(uriString);
+//                            }
+//                        }).addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
+//                                String uriString = uri.toString();
+//                                currentVehicle.setUri(uriString);
+//                            }
+//                        });
+//                    }
 //                            } catch (IOException e) {
 //                                e.printStackTrace();
 //                            }
-//                            for (Vehicle vehicle)
-
-    }
+//
+////        try {
+////                      for (Vehicle vehicle : vehicleList){
+////                            String name = vehicle.getName();
+////                            tempNameList.add(name);
+////                      }
+////
+////                      for (String name : tempNameList){
+////                          StorageReference vehicleImageRef = mStorageRef.child("images/" + name + ".jpg");
+////                          final File localFile = File.createTempFile("images", ".jpg");
+////                          vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+////                              @Override
+////                              public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+////                                  Uri uri = Uri.fromFile(localFile);
+////                                  String uriString = uri.toString();
+////                                 tempUriList.add(uriString);
+////                              }
+////                          }).addOnFailureListener(new OnFailureListener() {
+////                              @Override
+////                              public void onFailure(@NonNull Exception e) {
+////                                  Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
+////                                  String uriString = uri.toString();
+////                                  tempUriList.add(uriString);
+////                              }
+////                          });
+////
+////
+////
+////                      }
+////                            } catch (IOException e) {
+////                                e.printStackTrace();
+////                            }
+////                            for (Vehicle vehicle)
+//
+//    }
 
 
     @Override
@@ -374,6 +434,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnMyLocationButtonClickListener(this);
         googleMap.setOnMyLocationClickListener(this);
+
+//        for (Vehicle vehicle :vehicleList){
+//
+//            if (vehicle.getStringLatLngAsLatLng() != emptyLatLng){
+//                googleMap.addMarker(new MarkerOptions().position(vehicle.getStringLatLngAsLatLng()).title(vehicle.getName()));
+//            }
+//        }
 //        map.addMarker(new MarkerOptions()
 //                .position(new LatLng(0, 0))
 //                .title("Marker"));

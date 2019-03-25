@@ -3,6 +3,7 @@ package com.example.somename;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.CollectionReference;
 
 import java.io.Serializable;
@@ -14,6 +15,8 @@ public class Vehicle implements Serializable {
     private ArrayList images;
     private String description;
     private String uri;
+    private LatLng latLng;
+    private String[] stringLatLng;
 
     public String getVehiclesRef() {
         return vehiclesRef;
@@ -32,6 +35,7 @@ public class Vehicle implements Serializable {
     public Vehicle(String name, String description) {
         this.name = name;
         this.description = description;
+
        // this.uri = uri;
 
     }
@@ -69,5 +73,26 @@ public class Vehicle implements Serializable {
         this.uri = uri;
     }
 
+    public LatLng getLatLng() {
+        return latLng;
+    }
 
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }
+
+    public String[] getStringLatLng() {
+        return stringLatLng;
+    }
+
+    public LatLng getStringLatLngAsLatLng() {
+        double latitude = Double.parseDouble(stringLatLng[0]);
+        double longitude = Double.parseDouble(stringLatLng[1]);
+        LatLng latLngTemp = new LatLng(latitude, longitude);
+        return latLngTemp;
+    }
+
+    public void setStringLatLng(String[] stringLatLng) {
+        this.stringLatLng = stringLatLng;
+    }
 }

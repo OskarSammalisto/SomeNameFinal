@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         app:cardCornerRadius="10dp">
 
         <TextView
@@ -24,7 +24,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:textStyle="bold"
-            android:textSize="24dp"
+            android:textSize="24sp"
 
             />
 
@@ -32,11 +32,37 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/vehicleDescrCardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/vehicleNameCardView"
+        android:layout_marginTop="25dp"
+        app:cardCornerRadius="10dp">
+
+        <TextView
+            android:id="@+id/vehicleDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"
+
+            />
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
         android:id="@+id/vehicleInfoImageCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/vehicleNameCardView"
+        android:layout_below="@id/vehicleDescrCardView"
         android:layout_marginTop="30dp"
         app:cardCornerRadius="10dp">
 
@@ -54,29 +80,6 @@
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/vehicleInfoImageCard"
-            android:layout_marginTop="40dp"
-            app:cardCornerRadius="10dp">
-
-         <TextView
-            android:id="@+id/vehicleDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:textSize="16dp"
-
-            />
-
-    </android.support.v7.widget.CardView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/deleteVehicle"

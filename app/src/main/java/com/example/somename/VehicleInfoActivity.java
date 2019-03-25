@@ -79,7 +79,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
-                                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
+//                                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
 
                                 db.collection("vehicles").document(vehicleList.get(vehicle).getName()).delete();
 

@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -124,16 +125,19 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                 else {
                     Uri uri = Uri.fromFile(photoFile);
                     String uriString = uri.toString();
+//                    LatLng latLng = new LatLng(0,0);
+//                    String[] latLongString = latLng.toString().split(",");
 
 
 
                     Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString());
                     vehicle.setUri(uriString);
+                   // vehicle.setLatLng(latLng);
                     vehicleList.add(vehicle);
 
                     CollectionReference vehicleRef = db.collection("vehicles");
-                    String vehicleRefToString = vehicleRef.toString();
-                    vehicle.setVehiclesRef(vehicleRefToString);
+//                    String vehicleRefToString = vehicleRef.toString();
+//                    vehicle.setVehiclesRef(vehicleRefToString);
 
                     Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
 
@@ -142,12 +146,13 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     intent.putExtra("extra", extra);
 
                     //send image to fireBase cloud storage
-                    sendImageToCloud(photoFile);
+                  //  sendImageToCloud(photoFile);
 
                     //send object to fireStore
                     Map<String, Object> vehiclesHashMap = new HashMap<>();
                     vehiclesHashMap.put("name", vehicle.getName());
                     vehiclesHashMap.put("description", vehicle.getDescription());
+//                    vehiclesHashMap.put("stringLatLng", vehicle.getStringLatLng());
                     vehicleRef.document(vehicle.getName()).set(vehiclesHashMap);
                     //vehiclesHashMap.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!!
 
@@ -163,8 +168,6 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 //                            Log.w(TAG, "Error adding document", e);
 //                        }
 //                    });
-
-
 
                     startActivity(intent);
                 }
