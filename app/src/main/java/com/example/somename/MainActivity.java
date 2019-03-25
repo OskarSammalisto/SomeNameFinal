@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -103,8 +104,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            //recreate objects
                             Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
                             vehicleList.add(vehicle);
+                            //set temp picture to avoid crash
                             Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
                             String uriString = uri.toString();
                             vehicle.setUri(uriString);
@@ -140,6 +143,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
+//                    new CountDownTimer(30000, 1000) {
+//
+//                        public void onTick(long millisUntilFinished) {
+//
+//                        }
+//
+//                        public void onFinish() {
+//                            downloadImageAndSetUri(vehicleList);
+//                        }
+//                    }.start();
+
+
+                    //downloadImageAndSetUri(vehicleList);
                 }
             });
 
@@ -270,6 +286,73 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
 
+
+    }
+
+    public void downloadImageAndSetUri(ArrayList<Vehicle> vehicleList){
+        final ArrayList<String> tempNameList = new ArrayList<>();
+        final ArrayList<String> tempUriList = new ArrayList<>();
+
+
+
+        try {
+                    for (Vehicle  vehicle : vehicleList) {
+                        final Vehicle currentVehicle = vehicle;
+                        StorageReference vehicleImageRef = mStorageRef.child("images/" + vehicle.getName() + ".jpg");
+                        final File localFile = File.createTempFile("images", ".jpg");
+                        vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+
+                                Uri uri = Uri.fromFile(localFile);
+                                String uriString = uri.toString();
+                                currentVehicle.setUri(uriString);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
+                                String uriString = uri.toString();
+                                currentVehicle.setUri(uriString);
+                            }
+                        });
+                    }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+//        try {
+//                      for (Vehicle vehicle : vehicleList){
+//                            String name = vehicle.getName();
+//                            tempNameList.add(name);
+//                      }
+//
+//                      for (String name : tempNameList){
+//                          StorageReference vehicleImageRef = mStorageRef.child("images/" + name + ".jpg");
+//                          final File localFile = File.createTempFile("images", ".jpg");
+//                          vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                              @Override
+//                              public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                                  Uri uri = Uri.fromFile(localFile);
+//                                  String uriString = uri.toString();
+//                                 tempUriList.add(uriString);
+//                              }
+//                          }).addOnFailureListener(new OnFailureListener() {
+//                              @Override
+//                              public void onFailure(@NonNull Exception e) {
+//                                  Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
+//                                  String uriString = uri.toString();
+//                                  tempUriList.add(uriString);
+//                              }
+//                          });
+//
+//
+//
+//                      }
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                            for (Vehicle vehicle)
 
     }
 

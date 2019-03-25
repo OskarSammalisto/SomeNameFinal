@@ -3,6 +3,8 @@ package com.example.somename;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.google.firebase.firestore.CollectionReference;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -12,6 +14,17 @@ public class Vehicle implements Serializable {
     private ArrayList images;
     private String description;
     private String uri;
+
+    public String getVehiclesRef() {
+        return vehiclesRef;
+    }
+
+    public void setVehiclesRef(String vehiclesRef) {
+        this.vehiclesRef = vehiclesRef;
+    }
+
+    private String vehiclesRef;
+
 
 
     public Vehicle(){}
@@ -55,4 +68,6 @@ public class Vehicle implements Serializable {
     public void setUri(String uri) {
         this.uri = uri;
     }
+
+
 }

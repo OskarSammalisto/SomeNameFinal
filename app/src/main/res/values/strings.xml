@@ -5,6 +5,7 @@
     <string name="description">description</string>
     <string name="description_of_the_vehicle_goes_here_goes_here">Description of the vehicle goes here goes here</string>
     <string name="name_of_vehicle">Name Of Vehicle</string>
+    <string name="vehicle">Vehicle:</string>
     <string-array name="vehicle_spinner_icons">
         <item>Car</item>
         <item>Bike</item>

@@ -1,12 +1,18 @@
 package com.example.somename;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,16 +24,25 @@ public class VehicleInfoActivity extends AppCompatActivity {
     private int vehicle;
     private Uri uri;
     private String uriString;
+    private FloatingActionButton deleteVehicleFab;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_info);
 
-        //get arraylist
+        db = FirebaseFirestore.getInstance();
+
+        deleteVehicleFab = findViewById(R.id.deleteVehicle);
+
+        //get arrayList
         Bundle extra = getIntent().getBundleExtra("extra");
         vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
+        //get selected vehicle by arrayList position
         vehicle = getIntent().getIntExtra("vehicle", 0);
+
+
 
         TextView vehicleName = findViewById(R.id.vehicleName);
         vehicleName.setText(vehicleList.get(vehicle).getName());
@@ -51,6 +66,27 @@ public class VehicleInfoActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        deleteVehicleFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
+
+                db.collection("vehicles").document(vehicleList.get(vehicle).getName()).delete();
+
+
+                vehicleList.remove(vehicle);
+                Intent intent = new Intent(VehicleInfoActivity.this, VehicleListActivity.class);
+                Bundle extra = new Bundle();
+                extra.putSerializable("vehicleList", vehicleList);
+                intent.putExtra("extra", extra);
+                startActivity(intent);
+
+
+
+            }
+        });
 
 
     }
