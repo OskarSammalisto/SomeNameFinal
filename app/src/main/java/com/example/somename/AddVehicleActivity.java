@@ -126,14 +126,14 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                 //creates vehicle and goes back to vehicleListActivity.
                 else {
                     Uri uri = Uri.fromFile(photoFile);
-                    String uriString = uri.toString();
-//                    LatLng latLng = new LatLng(0,0);
+                   // String uriString = uri.toString();
+                    LatLng latLng = new LatLng(0,0);
 //                    String[] latLongString = latLng.toString().split(",");
 
 
 
-                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uri);
-                    vehicle.setUri(uriString);
+                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uri, latLng);
+                  //  vehicle.setUri(uriString);
                    // vehicle.setLatLng(latLng);
                     vehicleList.add(vehicle);
 
@@ -150,12 +150,14 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
                     //send image to fireBase cloud storage
-                  //  sendImageToCloud(photoFile);
+                  // sendImageToCloud(photoFile);
 
                     //send object to fireStore
                     Map<String, Object> vehiclesHashMap = new HashMap<>();
                     vehiclesHashMap.put("name", vehicle.getName());
                     vehiclesHashMap.put("description", vehicle.getDescription());
+//                    vehiclesHashMap.put("uriReal", vehicle.getUriReal());
+//                    vehiclesHashMap.put("latLng", vehicle.getLatLng());
 //                    vehiclesHashMap.put("stringLatLng", vehicle.getStringLatLng());
                     vehicleRef.document(vehicle.getName()).set(vehiclesHashMap);
                     //vehiclesHashMap.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!!
@@ -257,7 +259,8 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     //upload photo to fireBase storageCloud, works. Is currently open without authentication.
     private void sendImageToCloud(File image) {
         Uri file = Uri.fromFile(image);
-        StorageReference riversRef = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg");
+        final StorageReference riversRef = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg");
+
 
         riversRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -265,8 +268,17 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
                         //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Task<Uri> u = taskSnapshot.getMetadata().getReference().getDownloadUrl();  //this line might need to be something else but works for now.
+                        final Task<Uri> u = taskSnapshot.getMetadata().getReference().getDownloadUrl();  //this line might need to be something else but works for now.
                         Log.d("UPLOAD", "SUCCESS");
+
+                        riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Uri downloadUrl = uri;
+                                String url = uri.toString();
+                                vehicleList.get(vehicleList.size() -1).setUriReal(downloadUrl);
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

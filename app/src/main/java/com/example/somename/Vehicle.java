@@ -36,11 +36,11 @@ public class Vehicle implements Serializable, Parcelable {
 
     public Vehicle(){}
 
-    public Vehicle(String name, String description, Uri uri) {
+    public Vehicle(String name, String description, Uri uri, LatLng latLng) {
         this.name = name;
         this.description = description;
         this.uriReal = uri;
-
+        this.latLng = latLng;
        // this.uri = uri;
 
     }
@@ -98,16 +98,16 @@ public class Vehicle implements Serializable, Parcelable {
         return stringLatLng;
     }
 
-    public LatLng getStringLatLngAsLatLng() {
-        double latitude = Double.parseDouble(stringLatLng[0]);
-        double longitude = Double.parseDouble(stringLatLng[1]);
-        LatLng latLngTemp = new LatLng(latitude, longitude);
-        return latLngTemp;
-    }
-
-    public void setStringLatLng(String[] stringLatLng) {
-        this.stringLatLng = stringLatLng;
-    }
+//    public LatLng getStringLatLngAsLatLng() {
+//        double latitude = Double.parseDouble(stringLatLng[0]);
+//        double longitude = Double.parseDouble(stringLatLng[1]);
+//        LatLng latLngTemp = new LatLng(latitude, longitude);
+//        return latLngTemp;
+//    }
+//
+//    public void setStringLatLng(String[] stringLatLng) {
+//        this.stringLatLng = stringLatLng;
+//    }
 
     @Override
     public int describeContents() {

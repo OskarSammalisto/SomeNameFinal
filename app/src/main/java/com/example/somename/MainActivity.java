@@ -125,9 +125,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
                             String uriString = uri.toString();
                             vehicle.setUri(uriString);
+//                                if (vehicle.getUri() != null) {
+//                                    vehicle.setUriReal(Uri.parse((vehicle.getUri())));
+//                                }
+
+
 
 
                             //get image from cloud and set uri
+
+
+
+
+
+
 
 //                            try {
 //
