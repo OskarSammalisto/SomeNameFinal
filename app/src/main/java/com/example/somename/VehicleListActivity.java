@@ -53,13 +53,10 @@ public class VehicleListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+
                 Intent intent = new Intent(VehicleListActivity.this, AddVehicleActivity.class);
 
-//                Bundle extra = new Bundle();
-//                extra.putSerializable("vehicleList", vehicleList);
-//                intent.putExtra("extra", extra);
+
 
                 intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
@@ -80,7 +77,7 @@ public class VehicleListActivity extends AppCompatActivity {
 
 
 
-        //listers to clicks on listView. int position is arrayList index.
+        //listens to clicks on listView. int position is arrayList index.
         vehicleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,9 +85,6 @@ public class VehicleListActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(VehicleListActivity.this, VehicleInfoActivity.class);
 
-//                Bundle extra = new Bundle();
-//                extra.putSerializable("vehicleList", vehicleList);
-//                intent.putExtra("extra", extra);
 
                 intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
@@ -122,16 +116,14 @@ public class VehicleListActivity extends AppCompatActivity {
             public void onSwipeLeft() {
 
                 Intent intent = new Intent(VehicleListActivity.this, MainActivity.class);
-//                Bundle extra = new Bundle();
-//                extra.putSerializable("vehicleList", vehicleList);
-//                intent.putExtra("extra", extra);
+//
 
                 intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
-                //Toast.makeText(VehicleListActivity.this, "left", Toast.LENGTH_SHORT).show();
+
             }
             public void onSwipeBottom() {
                 Toast.makeText(VehicleListActivity.this, "bottom", Toast.LENGTH_SHORT).show();
@@ -145,26 +137,6 @@ public class VehicleListActivity extends AppCompatActivity {
 
     }
 
-    public void arrayListToFirebaseTest(ArrayList arrayList){
-        Map<String, ArrayList<Vehicle>> map = new HashMap<>();
-        map.get(arrayList); //doesn't add data, just creates directory.
-
-        db.collection("users")
-                .add(map)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-
-    }
 
     @Override
     public void onBackPressed(){

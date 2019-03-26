@@ -15,33 +15,24 @@ public class Vehicle implements Serializable, Parcelable {
 //ss
     private String name;
     private String description;
-    private Uri uriReal;
-    private LatLng latLng;
+    private String uriString;
+    private double latitude;
+    private double longitude;
 
     private ArrayList images;
-    private String uriString;
-    private String[] stringLatLng;
-
-    public String getVehiclesRef() {
-        return vehiclesRef;
-    }
-
-    public void setVehiclesRef(String vehiclesRef) {
-        this.vehiclesRef = vehiclesRef;
-    }
-
-    private String vehiclesRef;
 
 
 
     public Vehicle(){}
 
-    public Vehicle(String name, String description, Uri uri, LatLng latLng) {
+    public Vehicle(String name, String description, String uriString, Double latitude, Double longitude) {
         this.name = name;
         this.description = description;
-        this.uriReal = uri;
-        this.latLng = latLng;
-       // this.uri = uri;
+        this.uriString = uriString;
+        this.latitude = latitude;
+        this.longitude = longitude;
+
+
 
     }
 
@@ -78,36 +69,39 @@ public class Vehicle implements Serializable, Parcelable {
         this.uriString = uri;
     }
 
-    public Uri getUriReal() {
-        return uriReal;
-    }
-
-    public void setUriReal(Uri uriReal) {
-        this.uriReal = uriReal;
-    }
-
     public LatLng getLatLng() {
+
+        LatLng latLng = new LatLng(this.latitude, this.longitude);
+
         return latLng;
     }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public String[] getStringLatLng() {
-        return stringLatLng;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-//    public LatLng getStringLatLngAsLatLng() {
-//        double latitude = Double.parseDouble(stringLatLng[0]);
-//        double longitude = Double.parseDouble(stringLatLng[1]);
-//        LatLng latLngTemp = new LatLng(latitude, longitude);
-//        return latLngTemp;
-//    }
-//
-//    public void setStringLatLng(String[] stringLatLng) {
-//        this.stringLatLng = stringLatLng;
-//    }
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getUriString() {
+        return uriString;
+    }
+
+    public void setUriString(String uriString) {
+        this.uriString = uriString;
+    }
+
+    //parcelable section
+
 
     @Override
     public int describeContents() {
@@ -118,8 +112,10 @@ public class Vehicle implements Serializable, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeValue(uriReal);
-        dest.writeValue(latLng);
+        dest.writeString(uriString);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+
     }
 
     public static final Parcelable.Creator<Vehicle> CREATOR
@@ -134,11 +130,12 @@ public class Vehicle implements Serializable, Parcelable {
     };
 
     private Vehicle(Parcel in) {
-      //  mData = in.readInt();
         name = in.readString();
         description = in.readString();
-        uriReal = (Uri) in.readValue(Uri.class.getClassLoader());
-        latLng = (LatLng) in.readValue(LatLng.class.getClassLoader());
+        uriString = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+
     }
 
 }

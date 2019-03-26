@@ -57,7 +57,7 @@ public class VehicleListAdapter extends ArrayAdapter<String> {
         //vehicleLogo.setImageResource(currentVehicle.getLogo());
 
         Bitmap bitmap;
-        uri = currentVehicle.getUriReal();
+        uri = Uri.parse(currentVehicle.getUri());
         if (uri != null) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);

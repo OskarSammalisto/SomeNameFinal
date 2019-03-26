@@ -61,7 +61,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
 
         Bitmap bitmap;
         uriString = vehicleList.get(vehicle).getUri();
-        uri = vehicleList.get(vehicle).getUriReal();
+        uri = Uri.parse(vehicleList.get(vehicle).getUri());
         if (uri != null) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);

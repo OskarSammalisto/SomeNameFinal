@@ -168,16 +168,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-//                    new CountDownTimer(30000, 1000) {
-//
-//                        public void onTick(long millisUntilFinished) {
-//
-//                        }
-//
-//                        public void onFinish() {
-//                            downloadImageAndSetUri(vehicleList);
-//                        }
-//                    }.start();
+
 
 
                     //downloadImageAndSetUri(vehicleList);
@@ -266,10 +257,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onSwipeRight() {
                 Intent intent = new Intent(MainActivity.this, VehicleListActivity.class);
 
-//                //intent.putExtra("vehicleList", vehicleList);
-//                Bundle extra = new Bundle();
-//                extra.putSerializable("vehicleList", vehicleList);
-//                intent.putExtra("extra", extra);
+
 
                 intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
@@ -301,8 +289,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         public void onLocationResult(LocationResult locationResult) {
                             for (Location location : locationResult.getLocations()) {
 
-                                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                vehicleList.get(currentVehiclePosition).setLatLng(myLatLng);
+
+                                vehicleList.get(currentVehiclePosition).setLatitude(location.getLatitude());
+                                vehicleList.get(currentVehiclePosition).setLongitude(location.getLongitude());
+
+//                                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+//                                vehicleList.get(currentVehiclePosition).setLatLng(myLatLng);
 //
 //                               googleMap.addMarker(new MarkerOptions().position(vehicleList.get(currentVehiclePosition).getLatLng()).title(vehicleList.get(currentVehiclePosition).getName()));
 
@@ -358,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Bitmap bitmap;
 
-        Uri uri = vehicleList.get(currentVehiclePosition).getUriReal();
+        Uri uri = Uri.parse(vehicleList.get(currentVehiclePosition).getUri());
         if (uri != null) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);

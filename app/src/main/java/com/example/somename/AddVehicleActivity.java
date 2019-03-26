@@ -59,9 +59,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     private EditText newVehicleName;
     private EditText newVehicleDescription;
     private FloatingActionButton confirmButton;
-//    private Spinner spinner;
-//    private TextView vehicleSpinnerText;
-//    private ImageView vehicleLogo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,24 +73,12 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
         newVehicleName = findViewById(R.id.newVehicleName);
         newVehicleDescription = findViewById(R.id.vehicleDescription);
         confirmButton = findViewById(R.id.createVehicleButton);
-//        spinner = findViewById(R.id.iconSpinner);
-//        vehicleSpinnerText = findViewById(R.id.vehicleText);
-//        vehicleLogo = findViewById(R.id.vehicleIcon);
 
 
-//        //populate spinner with text
-////
-//        ArrayAdapter<String> iconSpinnerAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.vehicle_spinner_icons));
-//        spinner.setAdapter(iconSpinnerAdapter);
 
 
-//
-//
 
 
-        //get arrayList
-//        Bundle extra = getIntent().getBundleExtra("extra");
-//        vehicleList = (ArrayList<Vehicle>) extra.getSerializable("vehicleList");
 
         vehicleList = this.getIntent().getParcelableArrayListExtra("arrayListPars");
 
@@ -126,54 +112,36 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                 //creates vehicle and goes back to vehicleListActivity.
                 else {
                     Uri uri = Uri.fromFile(photoFile);
+                    String uriString = uri.toString();
                    // String uriString = uri.toString();
-                    LatLng latLng = new LatLng(0,0);
-//                    String[] latLongString = latLng.toString().split(",");
+
+                    // Temp lat and long, can be changed later
+                    Double lat = 0.0;
+                    Double lon = 0.0;
 
 
 
-                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uri, latLng);
-                  //  vehicle.setUri(uriString);
-                   // vehicle.setLatLng(latLng);
+
+                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uriString, lat, lon);
                     vehicleList.add(vehicle);
 
                     CollectionReference vehicleRef = db.collection("vehicles");
-//                    String vehicleRefToString = vehicleRef.toString();
-//                    vehicle.setVehiclesRef(vehicleRefToString);
+
 
                     Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
 
-//                    Bundle extra = new Bundle();
-//                    extra.putSerializable("vehicleList", vehicleList);
-//                    intent.putExtra("extra", extra);
+
 
                     intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
                     //send image to fireBase cloud storage
-                  // sendImageToCloud(photoFile);
+                    // sendImageToCloud(photoFile);
 
                     //send object to fireStore
-                    Map<String, Object> vehiclesHashMap = new HashMap<>();
-                    vehiclesHashMap.put("name", vehicle.getName());
-                    vehiclesHashMap.put("description", vehicle.getDescription());
-//                    vehiclesHashMap.put("uriReal", vehicle.getUriReal());
-//                    vehiclesHashMap.put("latLng", vehicle.getLatLng());
-//                    vehiclesHashMap.put("stringLatLng", vehicle.getStringLatLng());
-                    vehicleRef.document(vehicle.getName()).set(vehiclesHashMap);
-                    //vehiclesHashMap.put("uri", vehicle.getUri());  //might not work, probably makes new uri with different path!!!!!!!!!
+                    // set try catch or the like
+                    vehicleRef.document(vehicle.getName()).set(vehicle);
 
-//                    db.collection("vehicles").add(vehiclesHashMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                        @Override
-//                        public void onSuccess(DocumentReference documentReference) {
-//                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.w(TAG, "Error adding document", e);
-//                        }
-//                    });
+
 
                     startActivity(intent);
                 }
@@ -276,7 +244,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                             public void onSuccess(Uri uri) {
                                 Uri downloadUrl = uri;
                                 String url = uri.toString();
-                                vehicleList.get(vehicleList.size() -1).setUriReal(downloadUrl);
+                                //vehicleList.get(vehicleList.size() -1).setUriReal(downloadUrl);
                             }
                         });
                     }
