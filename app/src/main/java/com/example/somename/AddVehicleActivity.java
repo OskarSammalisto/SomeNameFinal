@@ -31,6 +31,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -99,9 +100,20 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
             @Override
             public void onClick(View v) {
 
+                boolean duplicateName = false;
+
+                for (Vehicle vehicle : vehicleList) {
+                    String temp = vehicle.getName();
+                    if (temp.equals(newVehicleName.getText().toString()) ) {
+                        duplicateName = true;
+                    } else duplicateName = false;
+
+                }
+
+
 
                 //check if all fields are filled, and pick is taken
-                if (photoFile == null || newVehicleName.getText().toString().length() == 0 || newVehicleDescription.getText().toString().length() == 0){
+                if (photoFile == null || newVehicleName.getText().toString().length() == 0 || newVehicleDescription.getText().toString().length() == 0 || duplicateName){
 
                     Toast.makeText(AddVehicleActivity.this, "You must fill in name, description and take a pic", Toast.LENGTH_SHORT).show();
                 }
@@ -124,6 +136,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
                     Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uriString, lat, lon);
                     vehicleList.add(vehicle);
+                    int vehicleListIndex = vehicleList.size() -1;
 
                     CollectionReference vehicleRef = db.collection("vehicles");
 
@@ -135,12 +148,11 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
                     //send image to fireBase cloud storage
-                    // sendImageToCloud(photoFile);
+                    sendImageToCloud(photoFile, vehicleListIndex);
 
                     //send object to fireStore
                     // set try catch or the like
                     vehicleRef.document(vehicle.getName()).set(vehicle);
-
 
 
                     startActivity(intent);
@@ -219,15 +231,19 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
         );
 
         currentPhotoPath = image.getAbsolutePath();
+
+     //   sendImageToCloud(image);                            //trying this !!!!!!
+
         return image;
 
     }
 
 
     //upload photo to fireBase storageCloud, works. Is currently open without authentication.
-    private void sendImageToCloud(File image) {
+    private void sendImageToCloud(File image, final int index) {
         Uri file = Uri.fromFile(image);
         final StorageReference riversRef = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg");
+
 
 
         riversRef.putFile(file)
@@ -237,13 +253,15 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                         // Get a URL to the uploaded content
                         //Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         final Task<Uri> u = taskSnapshot.getMetadata().getReference().getDownloadUrl();  //this line might need to be something else but works for now.
-                        Log.d("UPLOAD", "SUCCESS");
+                        vehicleList.get(index).setUri(u.toString());
+                        Log.d("UPLOAD", "Task <Uri> u = " +u.toString());
 
                         riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 Uri downloadUrl = uri;
                                 String url = uri.toString();
+
                                 //vehicleList.get(vehicleList.size() -1).setUriReal(downloadUrl);
                             }
                         });
@@ -261,5 +279,23 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
 
     }
+
+
+    //upload photo to fireBase different way
+//    private void imageToCloud(File image){
+//        Uri file = Uri.fromFile(image);
+//        UploadTask uploadTask = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg").putFile(file);
+//
+//        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//            }
+//        })
+//
+//
+//    }
+
+
 
 }

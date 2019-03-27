@@ -122,9 +122,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
                             vehicleList.add(vehicle);
                             //set temp picture to avoid crash
-                            Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
-                            String uriString = uri.toString();
-                            vehicle.setUri(uriString);
+//                            Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
+//                            String uriString = uri.toString();
+//                            vehicle.setUri(uriString);
+
+
 //                                if (vehicle.getUri() != null) {
 //                                    vehicle.setUriReal(Uri.parse((vehicle.getUri())));
 //                                }
@@ -178,6 +180,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         }
+
+
+
+
+
 
 //        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //            @Override
@@ -354,7 +361,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (uri != null) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                vehicleCardPic.setImageBitmap(bitmap);
+                //vehicleCardPic.setImageBitmap(bitmap);
+                vehicleCardPic.setImageURI(Uri.parse(vehicleList.get(currentVehiclePosition).getUri()));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -367,6 +375,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+    }
+
+
+    public void downloadAndSet(ArrayList<Vehicle> vehicleList) throws IOException {
+        for (final Vehicle vehicle : vehicleList) {
+
+            StorageReference storageReference = mStorageRef.child("images/" +vehicle.getName() + ".jpg");
+            File localFile = File.createTempFile("images", "jpg");
+            vehicle.setUri(Uri.fromFile(localFile).toString());
+            storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Log.d("!!!", "success");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("!!!", "no success");
+                }
+            });
+
+
+        }
     }
 
 //    public void downloadImageAndSetUri(ArrayList<Vehicle> vehicleList){

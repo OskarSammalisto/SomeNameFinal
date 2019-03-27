@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,6 +30,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
     private String uriString;
     private FloatingActionButton deleteVehicleFab;
     FirebaseFirestore db;
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,8 @@ public class VehicleInfoActivity extends AppCompatActivity {
         if (uri != null) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                imageView.setImageBitmap(bitmap);
+                //imageView.setImageBitmap(bitmap);
+                imageView.setImageURI(Uri.parse(vehicleList.get(vehicle).getUri()));
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -78,7 +82,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
 
         deleteVehicleFab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
                 new AlertDialog.Builder(VehicleInfoActivity.this)
                         .setMessage("Delete?")
@@ -89,7 +93,9 @@ public class VehicleInfoActivity extends AppCompatActivity {
 //                                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
 
                                 db.collection("vehicles").document(vehicleList.get(vehicle).getName()).delete();
+                                StorageReference deletePhoto = storageRef.child("images/" +vehicleList.get(vehicle).getName() +".jpg");
 
+                                deletePhoto.delete();
 
                                 vehicleList.remove(vehicle);
                                 Intent intent = new Intent(VehicleInfoActivity.this, VehicleListActivity.class);
