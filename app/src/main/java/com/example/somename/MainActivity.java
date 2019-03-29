@@ -38,6 +38,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private StorageReference mStorageRef;
     private int currentVehiclePosition = 0;
     private LatLng emptyLatLng = new LatLng(0.0,0.0);
+    private double myLat;
+    private double myLon;
+
 
 
 
@@ -107,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //vehicleList = this.getIntent().getParcelableArrayListExtra("arrayListPars");
 
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference vehicleRef = db.collection("vehicles");
 
 
         //retrieve from fireStore
@@ -227,13 +232,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
                     LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    myLat = location.getLatitude();
+                    myLon = location.getLongitude();
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
                     if (moveMapToLocation == 1) {
-                        // googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         moveMapToLocation = 0;
                     }
 
-                    Log.d("gps_test", "lat: " + location.getLatitude() + " ,long: " + location.getLongitude());
+                    Log.d("!!!! onlocation result", "lat: " + location.getLatitude() + " ,long: " + location.getLongitude());
                 }
             }
 
@@ -291,25 +298,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (!vehicleList.isEmpty()){
 
 
-                    locationCallback = new LocationCallback() {
-                        @Override
-                        public void onLocationResult(LocationResult locationResult) {
-                            for (Location location : locationResult.getLocations()) {
+
+                    vehicleList.get(currentVehiclePosition).setLatitude(myLat);
+                    vehicleList.get(currentVehiclePosition).setLongitude(myLon);
+                    googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude())).title(vehicleList.get(currentVehiclePosition).getName()));
+                    Log.d("!!!! on click outside other thing", "Vehicle: "   + vehicleList.get(currentVehiclePosition).getName() +"lat: " + vehicleList.get(currentVehiclePosition).getLatitude() +"lon: " + vehicleList.get(currentVehiclePosition).getLongitude() );
+
+                    vehicleRef.document(vehicleList.get(currentVehiclePosition).getName()).set(vehicleList.get(currentVehiclePosition));
 
 
-                                vehicleList.get(currentVehiclePosition).setLatitude(location.getLatitude());
-                                vehicleList.get(currentVehiclePosition).setLongitude(location.getLongitude());
 
-//                                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//                                vehicleList.get(currentVehiclePosition).setLatLng(myLatLng);
+                    //never goes through this
+//                    locationRequest = createLocationRequest();
+//                    locationCallback = new LocationCallback() {
+//                        @Override
+//                        public void onLocationResult(LocationResult locationResult) {
+//                            for (Location location : locationResult.getLocations()) {
 //
-//                               googleMap.addMarker(new MarkerOptions().position(vehicleList.get(currentVehiclePosition).getLatLng()).title(vehicleList.get(currentVehiclePosition).getName()));
-
-                                Log.d("gps_test", "lat: " + location.getLatitude() + " ,long: " + location.getLongitude());
-                            }
-                        }
-
-                    };
+//
+//                                vehicleList.get(currentVehiclePosition).setLatitude(location.getLatitude());
+//                                vehicleList.get(currentVehiclePosition).setLongitude(location.getLongitude());
+//
+////                                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+////                                vehicleList.get(currentVehiclePosition).setLatLng(myLatLng);
+////
+////                               googleMap.addMarker(new MarkerOptions().position(vehicleList.get(currentVehiclePosition).getLatLng()).title(vehicleList.get(currentVehiclePosition).getName()));
+//
+//                                Log.d("!!!! on click vehicle", "lat: " + location.getLatitude() + " ,long: " + location.getLongitude() +"vehicle: " +vehicleList.get(currentVehiclePosition).getName() + vehicleList.get(currentVehiclePosition).getLatitude());
+//                            }
+//                        }
+//
+//                    };
 
                     //make vehicle display complete first
                     Toast.makeText(MainActivity.this, "haven't made this yet", Toast.LENGTH_SHORT).show();
@@ -329,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (currentVehiclePosition >= vehicleList.size()){
                         currentVehiclePosition = 0;
                     }
+                    Log.d("!!!!", "currentvehicle pos" + currentVehiclePosition);
                     setVehicleDisplay();
 
                 }
@@ -486,12 +506,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setOnMyLocationButtonClickListener(this);
         googleMap.setOnMyLocationClickListener(this);
 
-//        for (Vehicle vehicle :vehicleList){
-//
-//            if (vehicle.getStringLatLngAsLatLng() != emptyLatLng){
-//                googleMap.addMarker(new MarkerOptions().position(vehicle.getStringLatLngAsLatLng()).title(vehicle.getName()));
-//            }
-//        }
+        for (Vehicle vehicle :vehicleList){
+
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicle.getLatitude(), vehicle.getLongitude())).title(vehicle.getName()));
+                Log.d("!!!", "vehicle: " + vehicle.getName() + " Lat: " + vehicle.getLatitude() + " Lon: " + vehicle.getLongitude());
+        }
 //        map.addMarker(new MarkerOptions()
 //                .position(new LatLng(0, 0))
 //                .title("Marker"));
