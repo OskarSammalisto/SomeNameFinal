@@ -6,24 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".AddVehicleActivity">
 
-    <ImageView
-        android:id="@+id/imageViewNewCarPicture"
-        android:layout_width="280dp"
-        android:layout_height="336dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/add_photo"
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/takePictureCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toTopOf="@+id/newVehicleName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription"
-        tools:srcCompat="@drawable/add_photo" />
+        app:layout_constraintVertical_bias="0.44">
+
+        <ImageView
+            android:id="@+id/imageViewNewCarPicture"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/add_photo"
+            tools:ignore="ContentDescription"
+            tools:srcCompat="@drawable/add_photo" />
+
+    </android.support.v7.widget.CardView>
 
 
     <EditText
@@ -61,14 +71,14 @@
         android:hint="@string/description"
         android:inputType="textCapSentences|text"
         android:maxLength="100"
-        android:maxLines="1"
 
-        app:layout_constraintBottom_toTopOf="@+id/createVehicleButton"
+        android:maxLines="1"
+        app:layout_constraintBottom_toTopOf="@+id/addLocationSwitch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.953" />
+        app:layout_constraintVertical_bias="0.92" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/createVehicleButton"
@@ -89,6 +99,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.981"
         app:srcCompat="@drawable/check" />
+
+
+    <Switch
+        android:id="@+id/addLocationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="40dp"
+        android:text="Add location?"
+        app:layout_constraintBottom_toTopOf="@+id/createVehicleButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
 
 
 </android.support.constraint.ConstraintLayout>

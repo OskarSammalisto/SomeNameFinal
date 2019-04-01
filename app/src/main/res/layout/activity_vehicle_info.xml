@@ -81,13 +81,14 @@
     </android.support.v7.widget.CardView>
 
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/deleteVehicle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
+        android:text="Delete"
         android:src="@drawable/baseline_delete_forever_black_18dp"/>
 
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.somename;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +61,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     private StorageReference mStorageRef;
     private EditText newVehicleName;
     private EditText newVehicleDescription;
+    private Switch setLocationSwitch;
     private FloatingActionButton confirmButton;
 
 
@@ -74,6 +77,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
         newVehicleName = findViewById(R.id.newVehicleName);
         newVehicleDescription = findViewById(R.id.vehicleDescription);
         confirmButton = findViewById(R.id.createVehicleButton);
+        setLocationSwitch = findViewById(R.id.addLocationSwitch);
 
 
 
@@ -130,6 +134,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     // Temp lat and long, can be changed later
                     Double lat = 0.0;
                     Double lon = 0.0;
+
 
 
 

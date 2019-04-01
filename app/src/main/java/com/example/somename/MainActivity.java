@@ -2,6 +2,7 @@ package com.example.somename;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -126,50 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             //recreate objects
                             Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
                             vehicleList.add(vehicle);
-                            //set temp picture to avoid crash
-//                            Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
-//                            String uriString = uri.toString();
-//                            vehicle.setUri(uriString);
 
-
-//                                if (vehicle.getUri() != null) {
-//                                    vehicle.setUriReal(Uri.parse((vehicle.getUri())));
-//                                }
-
-
-
-
-                            //get image from cloud and set uri
-
-
-
-
-
-
-
-//                            try {
-//
-//                                StorageReference vehicleImageRef = mStorageRef.child("images/" + vehicle.getName() + ".jpg");
-//                                final File localFile = File.createTempFile("images", ".jpg");
-//                                vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                                    @Override
-//                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                                        Uri uri = Uri.fromFile(localFile);
-//                                        String uriString = uri.toString();
-//                                        vehicle.setUri(uriString);
-//                                    }
-//                                }).addOnFailureListener(new OnFailureListener() {
-//                                    @Override
-//                                    public void onFailure(@NonNull Exception e) {
-//                                        Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
-//                                        String uriString = uri.toString();
-//                                        vehicle.setUri(uriString);
-//                                    }
-//                                });
-//
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
                         }
 
                     } else {
@@ -178,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-                    //downloadImageAndSetUri(vehicleList);
+
                 }
             });
 
@@ -187,22 +147,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-
-
-
-
-//        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Log.d(TAG, document.getId() + " => " + document.getData());
-//                    }
-//                } else {
-//                    Log.w(TAG, "Error getting documents.", task.getException());
-//                }
-//            }drawable/baseline_directions_car_black_18dp.png
-//        });
 
 
         //location gps
@@ -248,18 +192,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//               // moveMapToLocation = 1;
-//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-
         //set swipe listener on activity main
         ConstraintLayout layout = findViewById(R.id.activityMain);
 
@@ -297,41 +229,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 if (!vehicleList.isEmpty()){
 
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setMessage("Park " +vehicleList.get(currentVehiclePosition).getName() + " here?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    //set lat lon on vehicle
+                                    vehicleList.get(currentVehiclePosition).setLatitude(myLat);
+                                    vehicleList.get(currentVehiclePosition).setLongitude(myLon);
 
 
-                    vehicleList.get(currentVehiclePosition).setLatitude(myLat);
-                    vehicleList.get(currentVehiclePosition).setLongitude(myLon);
-                    googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude())).title(vehicleList.get(currentVehiclePosition).getName()));
-                    Log.d("!!!! on click outside other thing", "Vehicle: "   + vehicleList.get(currentVehiclePosition).getName() +"lat: " + vehicleList.get(currentVehiclePosition).getLatitude() +"lon: " + vehicleList.get(currentVehiclePosition).getLongitude() );
+                                    // clear and update markers
+                                    googleMap.clear();
 
-                    vehicleRef.document(vehicleList.get(currentVehiclePosition).getName()).set(vehicleList.get(currentVehiclePosition));
+                                    for (Vehicle vehicle :vehicleList){
+                                        if (vehicle.getLatitude() != 0){
+                                            googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicle.getLatitude(), vehicle.getLongitude())).title(vehicle.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_directions_car_black_18dp)));
+                                            Log.d("!!!", "vehicle: " + vehicle.getName() + " Lat: " + vehicle.getLatitude() + " Lon: " + vehicle.getLongitude());
+
+                                        }
+
+                                    }
+
+                                    // googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude())).title(vehicleList.get(currentVehiclePosition).getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_directions_car_black_18dp)));
+                                    Log.d("!!!!", "Vehicle: "   + vehicleList.get(currentVehiclePosition).getName() +"lat: " + vehicleList.get(currentVehiclePosition).getLatitude() +"lon: " + vehicleList.get(currentVehiclePosition).getLongitude() );
+
+                                    //update vehicle in fireBase
+                                    vehicleRef.document(vehicleList.get(currentVehiclePosition).getName()).set(vehicleList.get(currentVehiclePosition));
 
 
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
 
-                    //never goes through this
-//                    locationRequest = createLocationRequest();
-//                    locationCallback = new LocationCallback() {
-//                        @Override
-//                        public void onLocationResult(LocationResult locationResult) {
-//                            for (Location location : locationResult.getLocations()) {
-//
-//
-//                                vehicleList.get(currentVehiclePosition).setLatitude(location.getLatitude());
-//                                vehicleList.get(currentVehiclePosition).setLongitude(location.getLongitude());
-//
-////                                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-////                                vehicleList.get(currentVehiclePosition).setLatLng(myLatLng);
-////
-////                               googleMap.addMarker(new MarkerOptions().position(vehicleList.get(currentVehiclePosition).getLatLng()).title(vehicleList.get(currentVehiclePosition).getName()));
-//
-//                                Log.d("!!!! on click vehicle", "lat: " + location.getLatitude() + " ,long: " + location.getLongitude() +"vehicle: " +vehicleList.get(currentVehiclePosition).getName() + vehicleList.get(currentVehiclePosition).getLatitude());
-//                            }
-//                        }
-//
-//                    };
 
-                    //make vehicle display complete first
-                    Toast.makeText(MainActivity.this, "haven't made this yet", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -348,8 +281,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (currentVehiclePosition >= vehicleList.size()){
                         currentVehiclePosition = 0;
                     }
-                    Log.d("!!!!", "currentvehicle pos" + currentVehiclePosition);
+                    Log.d("!!!!", "currentVehicle pos" + currentVehiclePosition);
                     setVehicleDisplay();
+
+
+                    LatLng myLatLng = new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude());
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    moveMapToLocation = 0;
+
 
                 }
 
@@ -420,72 +360,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-//    public void downloadImageAndSetUri(ArrayList<Vehicle> vehicleList){
-//        final ArrayList<String> tempNameList = new ArrayList<>();
-//        final ArrayList<String> tempUriList = new ArrayList<>();
-//
-//
-//
-//        try {
-//                    for (Vehicle  vehicle : vehicleList) {
-//                        final Vehicle currentVehicle = vehicle;
-//                        StorageReference vehicleImageRef = mStorageRef.child("images/" + vehicle.getName() + ".jpg");
-//                        final File localFile = File.createTempFile("images", ".jpg");
-//                        vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                            @Override
-//                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//
-//                                Uri uri = Uri.fromFile(localFile);
-//                                String uriString = uri.toString();
-//                                currentVehicle.setUri(uriString);
-//                            }
-//                        }).addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
-//                                String uriString = uri.toString();
-//                                currentVehicle.setUri(uriString);
-//                            }
-//                        });
-//                    }
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//
-////        try {
-////                      for (Vehicle vehicle : vehicleList){
-////                            String name = vehicle.getName();
-////                            tempNameList.add(name);
-////                      }
-////
-////                      for (String name : tempNameList){
-////                          StorageReference vehicleImageRef = mStorageRef.child("images/" + name + ".jpg");
-////                          final File localFile = File.createTempFile("images", ".jpg");
-////                          vehicleImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-////                              @Override
-////                              public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-////                                  Uri uri = Uri.fromFile(localFile);
-////                                  String uriString = uri.toString();
-////                                 tempUriList.add(uriString);
-////                              }
-////                          }).addOnFailureListener(new OnFailureListener() {
-////                              @Override
-////                              public void onFailure(@NonNull Exception e) {
-////                                  Uri uri = Uri.parse("android.recource://com.example.somename/drawable/baseline_directions_car_black_18dp.png");
-////                                  String uriString = uri.toString();
-////                                  tempUriList.add(uriString);
-////                              }
-////                          });
-////
-////
-////
-////                      }
-////                            } catch (IOException e) {
-////                                e.printStackTrace();
-////                            }
-////                            for (Vehicle vehicle)
-//
-//    }
+
 
 
     @Override
@@ -507,13 +382,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setOnMyLocationClickListener(this);
 
         for (Vehicle vehicle :vehicleList){
+                if (vehicle.getLatitude() != 0){
+                    googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicle.getLatitude(), vehicle.getLongitude())).title(vehicle.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_directions_car_black_18dp)));
+                    Log.d("!!!", "vehicle: " + vehicle.getName() + " Lat: " + vehicle.getLatitude() + " Lon: " + vehicle.getLongitude());
 
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicle.getLatitude(), vehicle.getLongitude())).title(vehicle.getName()));
-                Log.d("!!!", "vehicle: " + vehicle.getName() + " Lat: " + vehicle.getLatitude() + " Lon: " + vehicle.getLongitude());
+                }
+
         }
-//        map.addMarker(new MarkerOptions()
-//                .position(new LatLng(0, 0))
-//                .title("Marker"));
+
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
+                startActivity(intent);
+            }
+        });
+
 
 
 

@@ -54,13 +54,20 @@ public class VehicleListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(VehicleListActivity.this, AddVehicleActivity.class);
+                if (vehicleList.size() < 6) {
+                    Intent intent = new Intent(VehicleListActivity.this, AddVehicleActivity.class);
 
 
 
-                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
+                    intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
-                startActivity(intent);
+                    startActivity(intent);
+
+                }
+
+                else {
+                    Toast.makeText(VehicleListActivity.this, "You can only store six Vehicles at a time!", Toast.LENGTH_LONG).show();
+                }
 
 
 
@@ -109,8 +116,7 @@ public class VehicleListActivity extends AppCompatActivity {
                 Toast.makeText(VehicleListActivity.this, "top", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeRight() {
-                //test send arraylist to firestore
-               // arrayListToFirebaseTest(vehicleList);
+
               Toast.makeText(VehicleListActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeLeft() {
