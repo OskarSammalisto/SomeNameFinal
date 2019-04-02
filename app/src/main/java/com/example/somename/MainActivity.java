@@ -131,7 +131,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
                             vehicleList.add(vehicle);
 
+                        }setVehicleDisplay();
+                        for (Vehicle vehicle :vehicleList){
+                            if (vehicle.getLatitude() != 0){
+                                googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicle.getLatitude(), vehicle.getLongitude())).title(vehicle.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_directions_car_black_18dp)));
+                                Log.d("!!!", "vehicle: " + vehicle.getName() + " Lat: " + vehicle.getLatitude() + " Lon: " + vehicle.getLongitude());
+
+                            }
+
                         }
+
 
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
@@ -387,6 +396,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnMyLocationButtonClickListener(this);
         googleMap.setOnMyLocationClickListener(this);
+
+
 
         for (Vehicle vehicle :vehicleList){
                 if (vehicle.getLatitude() != 0){
