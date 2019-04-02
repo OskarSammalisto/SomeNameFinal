@@ -1,5 +1,6 @@
 package com.example.somename;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -25,6 +27,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,8 +67,16 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     private EditText newVehicleDescription;
     private Switch setLocationSwitch;
     private FloatingActionButton confirmButton;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Double lat;
+    private Double lon;
+    private Double emptyLat = 0.0;
+    private Double emptyLon = 0.0;
+    private Double setLat = 0.0;
+    private Double setLon = 0.0;
 
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,15 +91,38 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
         confirmButton = findViewById(R.id.createVehicleButton);
         setLocationSwitch = findViewById(R.id.addLocationSwitch);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(AddVehicleActivity.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null) {
+                    lat = location.getLatitude();
+                    lon = location.getLongitude();
+                }
 
+            }
+        });
 
-
+        setLocationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    setLat = lat;
+                    setLon = lon;
+                } else {
+                    setLat = emptyLat;
+                    setLon = emptyLon;
+                }
+            }
+        });
 
         vehicleList = this.getIntent().getParcelableArrayListExtra("arrayListPars");
 
         ImageView imageViewNewCarPictureButton = findViewById(R.id.imageViewNewCarPicture);
+
+
 
 
         //clicking image opens camera method
@@ -101,6 +136,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
         //create new vehicle and go back to vehicleListActivity.
         confirmButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onClick(View v) {
 
@@ -131,15 +167,9 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     String uriString = uri.toString();
                    // String uriString = uri.toString();
 
-                    // Temp lat and long, can be changed later
-                    Double lat = 0.0;
-                    Double lon = 0.0;
 
 
-
-
-
-                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uriString, lat, lon);
+                    Vehicle vehicle = new Vehicle(newVehicleName.getText().toString(), newVehicleDescription.getText().toString(), uriString, setLat, setLon);
                     vehicleList.add(vehicle);
                     int vehicleListIndex = vehicleList.size() -1;
 

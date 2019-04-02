@@ -113,11 +113,11 @@ public class VehicleListActivity extends AppCompatActivity {
 
         vehicleListView.setOnTouchListener(new com.example.somename.OnSwipeTouchListener(VehicleListActivity.this) {
             public void onSwipeTop() {
-                Toast.makeText(VehicleListActivity.this, "top", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(VehicleListActivity.this, "top", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeRight() {
 
-              Toast.makeText(VehicleListActivity.this, "right", Toast.LENGTH_SHORT).show();
+             // Toast.makeText(VehicleListActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeLeft() {
 
@@ -132,7 +132,7 @@ public class VehicleListActivity extends AppCompatActivity {
 
             }
             public void onSwipeBottom() {
-                Toast.makeText(VehicleListActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(VehicleListActivity.this, "bottom", Toast.LENGTH_SHORT).show();
             }
 
         });

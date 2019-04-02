@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -195,11 +196,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //set swipe listener on activity main
         ConstraintLayout layout = findViewById(R.id.activityMain);
 
+
         layout.setOnTouchListener(new com.example.somename.OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeTop() {
-                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
             }
-
             public void onSwipeRight() {
                 Intent intent = new Intent(MainActivity.this, VehicleListActivity.class);
 
@@ -213,11 +214,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             public void onSwipeLeft() {
-                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
 
             public void onSwipeBottom() {
-                Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -285,10 +286,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     setVehicleDisplay();
 
 
-                    LatLng myLatLng = new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude());
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                    moveMapToLocation = 0;
+
+                    if (vehicleList.get(currentVehiclePosition).getLatitude() != 0.0 && vehicleList.get(currentVehiclePosition).getLongitude() != 0.0){
+                        LatLng myLatLng = new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude());
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        moveMapToLocation = 0;
+                    } else {
+                        Toast.makeText(MainActivity.this, "Vehicle has no saved position!", Toast.LENGTH_SHORT).show();
+                    }
+
 
 
                 }
