@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -32,6 +34,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
     private Button deleteVehicleFab;
     FirebaseFirestore db;
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,9 @@ public class VehicleInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vehicle_info);
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        final CollectionReference vehicleRef = db.collection("users").document(user.getUid()).collection("vehicles");
 
         deleteVehicleFab = findViewById(R.id.deleteVehicle);
 
@@ -93,8 +99,10 @@ public class VehicleInfoActivity extends AppCompatActivity {
 
 //                                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
 
-                                db.collection("vehicles").document(vehicleList.get(vehicle).getName()).delete();
-                                StorageReference deletePhoto = storageRef.child("images/" +vehicleList.get(vehicle).getName() +".jpg");
+                                vehicleRef.document(vehicleList.get(vehicle).getName()).delete();
+
+                                String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                StorageReference deletePhoto =  storageRef.child("images/" +userUid +"/" +vehicleList.get(vehicle).getName() +".jpg"); //storageRef.child("images/" +vehicleList.get(vehicle).getName() +".jpg");
 
                                 deletePhoto.delete();
 

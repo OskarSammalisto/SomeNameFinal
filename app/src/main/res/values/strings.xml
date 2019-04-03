@@ -6,6 +6,11 @@
     <string name="description_of_the_vehicle_goes_here_goes_here">Description of the vehicle goes here goes here</string>
     <string name="name_of_vehicle">Name Of Vehicle</string>
     <string name="vehicle">Vehicle:</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="log_out">Log Out</string>
     <string-array name="vehicle_spinner_icons">
         <item>Car</item>
         <item>Bike</item>

@@ -33,6 +33,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -74,7 +76,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     private Double emptyLon = 0.0;
     private Double setLat = 0.0;
     private Double setLon = 0.0;
-
+    private FirebaseAuth mAuth;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -84,6 +86,8 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
         db = FirebaseFirestore.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
 
         //set view and button variables
         newVehicleName = findViewById(R.id.newVehicleName);
@@ -173,7 +177,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     vehicleList.add(vehicle);
                     int vehicleListIndex = vehicleList.size() -1;
 
-                    CollectionReference vehicleRef = db.collection("vehicles");
+                    CollectionReference vehicleRef = db.collection("users").document(user.getUid()).collection("vehicles");
 
 
                     Intent intent = new Intent(AddVehicleActivity.this, VehicleListActivity.class);
@@ -277,8 +281,9 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     //upload photo to fireBase storageCloud, works. Is currently open without authentication.
     private void sendImageToCloud(File image, final int index) {
         Uri file = Uri.fromFile(image);
-        final StorageReference riversRef = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg");
-
+     // final StorageReference riversRef = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg");
+        String userUid = mAuth.getInstance().getCurrentUser().getUid();
+       final StorageReference riversRef = mStorageRef.child("images/" +userUid +"/" +newVehicleName.getText().toString() + ".jpg");
 
 
         riversRef.putFile(file)
@@ -289,7 +294,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                         //Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         final Task<Uri> u = taskSnapshot.getMetadata().getReference().getDownloadUrl();  //this line might need to be something else but works for now.
                         vehicleList.get(index).setUri(u.toString());
-                        Log.d("UPLOAD", "Task <Uri> u = " +u.toString());
+                        Log.d("!!!!", "upload complete" +u.toString());
 
                         riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override

@@ -42,6 +42,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng emptyLatLng = new LatLng(0.0,0.0);
     private double myLat;
     private double myLon;
-
+    private FirebaseAuth mAuth;
 
 
 
@@ -98,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
         //get arraylist
        // Bundle extra = getIntent().getBundleExtra("extra");
 
@@ -116,13 +121,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference vehicleRef = db.collection("vehicles");
+        final CollectionReference vehicleRef = db.collection("users").document(user.getUid()).collection("vehicles");
 
 
         //retrieve from fireStore
 
         if (vehicleList.isEmpty()) {
-            db.collection("vehicles").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            vehicleRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
@@ -131,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
                             vehicleList.add(vehicle);
 
-                        }setVehicleDisplay();
+                        } if (!vehicleList.isEmpty())setVehicleDisplay();
                         for (Vehicle vehicle :vehicleList){
                             if (vehicle.getLatitude() != 0){
                                 googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicle.getLatitude(), vehicle.getLongitude())).title(vehicle.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_directions_car_black_18dp)));
@@ -223,6 +228,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             public void onSwipeLeft() {
+                Intent intent = new Intent(MainActivity.this, OptionsActivity.class);
+
+
+
+                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
+
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
              //   Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
             }
 
@@ -307,6 +321,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+                } else {
+                    Toast.makeText(MainActivity.this, "You have no saved vehicles.", Toast.LENGTH_SHORT).show();
                 }
 
             }
