@@ -187,7 +187,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                     intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
 
                     //send image to fireBase cloud storage
-                    sendImageToCloud(photoFile, vehicleListIndex);
+                    sendImageToCloud(photoFile, vehicle);
 
                     //send object to fireStore
                     // set try catch or the like
@@ -278,12 +278,13 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     }
 
 
-    //upload photo to fireBase storageCloud, works. Is currently open without authentication.
-    private void sendImageToCloud(File image, final int index) {
+    //upload photo to fireBase storageCloud, works.
+    private void sendImageToCloud(File image, final Vehicle vehicle) {
         Uri file = Uri.fromFile(image);
      // final StorageReference riversRef = mStorageRef.child("images/" +newVehicleName.getText().toString() + ".jpg");
         String userUid = mAuth.getInstance().getCurrentUser().getUid();
        final StorageReference riversRef = mStorageRef.child("images/" +userUid +"/" +newVehicleName.getText().toString() + ".jpg");
+       String ref = riversRef.toString();
 
 
         riversRef.putFile(file)
@@ -293,7 +294,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                         // Get a URL to the uploaded content
                         //Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         final Task<Uri> u = taskSnapshot.getMetadata().getReference().getDownloadUrl();  //this line might need to be something else but works for now.
-                        vehicleList.get(index).setUri(u.toString());
+                        vehicle.setUri(u.toString());
                         Log.d("!!!!", "upload complete" +u.toString());
 
                         riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -301,6 +302,8 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                             public void onSuccess(Uri uri) {
                                 Uri downloadUrl = uri;
                                 String url = uri.toString();
+                                vehicle.setStorageUrl(url);
+                                Log.d("!!!", "stor url: " +url);
 
                                 //vehicleList.get(vehicleList.size() -1).setUriReal(downloadUrl);
                             }

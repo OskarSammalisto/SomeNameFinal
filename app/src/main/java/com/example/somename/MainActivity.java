@@ -6,8 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -58,12 +60,15 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double myLat;
     private double myLon;
     private FirebaseAuth mAuth;
+    private String currentPhotoPath;
 
 
 
@@ -122,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference vehicleRef = db.collection("users").document(user.getUid()).collection("vehicles");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
         //retrieve from fireStore
@@ -133,10 +140,53 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                             //recreate objects
-                            Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
+                            final Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
                             vehicleList.add(vehicle);
+                            Log.d("!!!", "added vehicles");
 
-                        } if (!vehicleList.isEmpty())setVehicleDisplay();
+                            File vehiclePhoto = new File(Uri.parse(vehicle.getUri()).getPath());
+                            if (vehiclePhoto.exists()){
+                                Log.d("!!!", "file exists");
+
+                            } else {
+//                                FirebaseStorage storage = FirebaseStorage.getInstance();
+//                                StorageReference pictureReference = storage.getReferenceFromUrl(vehicle.getStorageUrl());
+
+                                String userUid = mAuth.getInstance().getCurrentUser().getUid();
+                                final StorageReference pictureReference = mStorageRef.child("images/" +userUid +"/" +vehicle.getName() + ".jpg");
+                                Log.d("!!!", "got to here");
+
+                                try {
+                                    final File localFile = File.createTempFile("images", "jpg");
+                                    pictureReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+
+                                            //Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                            //set uri to vehicle
+                                            Uri localFileUri = Uri.fromFile(localFile);
+                                            String uriString = localFileUri.toString();
+
+                                            vehicle.setUri(uriString);
+                                            Log.d("!!!", "download file success" + vehicle.getName());
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
+                                } catch (IOException e) {
+                                    Log.d("!!!", "downl not success");
+                                }
+                            }
+
+
+                        }
+
+
+
+                        if (!vehicleList.isEmpty())setVehicleDisplay();
                         for (Vehicle vehicle :vehicleList){
                             if (vehicle.getLatitude() != 0){
                                 googleMap.addMarker(new MarkerOptions().position(new LatLng(vehicle.getLatitude(), vehicle.getLongitude())).title(vehicle.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_directions_car_black_18dp)));
@@ -435,6 +485,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+
+    }
+
+    private File createImageFile() throws IOException {
+        //create a unique filename for a picture using date/time
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        currentPhotoPath = image.getAbsolutePath();
+
+        //   sendImageToCloud(image);                            //trying this !!!!!!
+
+        return image;
 
     }
 

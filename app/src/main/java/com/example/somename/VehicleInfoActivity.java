@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -105,6 +106,14 @@ public class VehicleInfoActivity extends AppCompatActivity {
                                 StorageReference deletePhoto =  storageRef.child("images/" +userUid +"/" +vehicleList.get(vehicle).getName() +".jpg"); //storageRef.child("images/" +vehicleList.get(vehicle).getName() +".jpg");
 
                                 deletePhoto.delete();
+
+                                //delete local image file
+                                File deleteFile = new File(Uri.parse(vehicleList.get(vehicle).getUri()).getPath());
+                                if (deleteFile.exists()) {
+                                     deleteFile.delete();
+                                }
+
+
 
                                 vehicleList.remove(vehicle);
                                 Intent intent = new Intent(VehicleInfoActivity.this, VehicleListActivity.class);

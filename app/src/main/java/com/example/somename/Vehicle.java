@@ -19,6 +19,8 @@ public class Vehicle implements Serializable, Parcelable {
     private double latitude;
     private double longitude;
 
+    private String storageUrl;
+
     private ArrayList images;
 
 
@@ -100,6 +102,14 @@ public class Vehicle implements Serializable, Parcelable {
         this.uriString = uriString;
     }
 
+    public String getStorageUrl() {
+        return storageUrl;
+    }
+
+    public void setStorageUrl(String storageUrl) {
+        this.storageUrl = storageUrl;
+    }
+
     //parcelable section
 
 
@@ -115,6 +125,7 @@ public class Vehicle implements Serializable, Parcelable {
         dest.writeString(uriString);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeString(storageUrl);
 
     }
 
@@ -135,6 +146,7 @@ public class Vehicle implements Serializable, Parcelable {
         uriString = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
+        storageUrl = in.readString();
 
     }
 
