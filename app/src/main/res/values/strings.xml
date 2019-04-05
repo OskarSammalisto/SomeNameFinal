@@ -11,6 +11,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="log_out">Log Out</string>
+    <string name="downloading_assets">Downloading Assets</string>
     <string-array name="vehicle_spinner_icons">
         <item>Car</item>
         <item>Bike</item>

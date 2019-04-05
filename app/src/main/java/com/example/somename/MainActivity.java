@@ -134,11 +134,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //retrieve from fireStore
 
         if (vehicleList.isEmpty()) {
+
             vehicleRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            findViewById(R.id.mainScreen).setVisibility(View.GONE);
                             //recreate objects
                             final Vehicle vehicle = documentSnapshot.toObject(Vehicle.class);
                             vehicleList.add(vehicle);
@@ -147,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             File vehiclePhoto = new File(Uri.parse(vehicle.getUri()).getPath());
                             if (vehiclePhoto.exists()){
                                 Log.d("!!!", "file exists");
+                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                findViewById(R.id.mainScreen).setVisibility(View.VISIBLE);
 
                             } else {
 //                                FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -169,6 +173,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                             vehicle.setUri(uriString);
                                             Log.d("!!!", "download file success" + vehicle.getName());
+                                            if (!vehicleList.isEmpty())setVehicleDisplay();
+                                            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                            findViewById(R.id.mainScreen).setVisibility(View.VISIBLE);
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
