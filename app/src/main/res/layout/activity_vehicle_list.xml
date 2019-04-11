@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="VehicleListActivity"
     android:id="@+id/vehicleListActivity"
+    android:background="@color/darkPurple"
     >
 
     <ListView

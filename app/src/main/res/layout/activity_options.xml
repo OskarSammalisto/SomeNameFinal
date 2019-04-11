@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".OptionsActivity"
-    android:id="@+id/optionsActivity">
+    android:id="@+id/optionsActivity"
+    android:background="@color/darkPurple">
 
     <Button
         android:id="@+id/logOut"
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/log_out"/>
+        android:text="@string/log_out"
+        android:background="@color/colorAccent"/>
 
 </RelativeLayout>

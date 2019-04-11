@@ -1,7 +1,9 @@
 package com.example.somename;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -12,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -77,6 +80,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
     private Double setLat = 0.0;
     private Double setLon = 0.0;
     private FirebaseAuth mAuth;
+    private static final int REQUEST_CAMERA = 1;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -88,6 +92,11 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA);
+        }
 
         //set view and button variables
         newVehicleName = findViewById(R.id.newVehicleName);
@@ -206,6 +215,11 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
 
     //goes to camera
     private void dispatchTakePictureIntent() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA);
+        }
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             //create file for photo

@@ -23,8 +23,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +75,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, PopupMenu.OnMenuItemClickListener {
     //git test text
 //    private static final String TAG = "MainActivity"; //FireStore Constant
     FirebaseFirestore db;
@@ -351,30 +354,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        FloatingActionButton cycleVehiclesButton = findViewById(R.id.fabCycleVehicles);
+        final FloatingActionButton cycleVehiclesButton = findViewById(R.id.fabCycleVehicles);
 
         cycleVehiclesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (vehicleList != null && !vehicleList.isEmpty()){
 
-                    currentVehiclePosition ++;
-                    if (currentVehiclePosition >= vehicleList.size()){
-                        currentVehiclePosition = 0;
-                    }
-                    Log.d("!!!!", "currentVehicle pos" + currentVehiclePosition);
-                    setVehicleDisplay();
 
+                   showPopup(cycleVehiclesButton);
 
-
-                    if (vehicleList.get(currentVehiclePosition).getLatitude() != 0.0 && vehicleList.get(currentVehiclePosition).getLongitude() != 0.0){
-                        LatLng myLatLng = new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude());
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                        moveMapToLocation = 0;
-                    } else {
-                        Toast.makeText(MainActivity.this, "Vehicle has no saved position!", Toast.LENGTH_SHORT).show();
-                    }
+//                    currentVehiclePosition ++;
+//                    if (currentVehiclePosition >= vehicleList.size()){
+//                        currentVehiclePosition = 0;
+//                    }
+//                    Log.d("!!!!", "currentVehicle pos" + currentVehiclePosition);
+//                    setVehicleDisplay();
+//
+//
+//
+//                    if (vehicleList.get(currentVehiclePosition).getLatitude() != 0.0 && vehicleList.get(currentVehiclePosition).getLongitude() != 0.0){
+//                        LatLng myLatLng = new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude());
+//                        CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
+//                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                        moveMapToLocation = 0;
+//                    } else {
+//                        Toast.makeText(MainActivity.this, "Vehicle has no saved position!", Toast.LENGTH_SHORT).show();
+//                    }
 
 
 
@@ -393,7 +399,67 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
+
+
     }
+
+    public void showPopup(View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+
+        MenuInflater menuInflater = popupMenu.getMenuInflater();
+
+        for (Vehicle vehicle : vehicleList) {
+            popupMenu.getMenu().add(vehicle.getName());
+        }
+
+        popupMenu.setOnMenuItemClickListener(this);
+        menuInflater.inflate(R.menu.vehicle_menu, popupMenu.getMenu());
+        popupMenu.show();
+
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        String title = item.getTitle().toString();
+
+
+        if (vehicleList != null) {
+            for (Vehicle vehicle : vehicleList) {
+                if (title.equals(vehicle.getName())){
+                    currentVehiclePosition = vehicleList.indexOf(vehicle);
+                }
+            }
+            setVehicleDisplay();
+            if (vehicleList.get(currentVehiclePosition).getLatitude() != 0.0 && vehicleList.get(currentVehiclePosition).getLongitude() != 0.0){
+                LatLng myLatLng = new LatLng(vehicleList.get(currentVehiclePosition).getLatitude(), vehicleList.get(currentVehiclePosition).getLongitude());
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(17).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                moveMapToLocation = 0;
+            } else {
+                Toast.makeText(MainActivity.this, "Vehicle has no saved position!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
+
+      //  Toast.makeText(MainActivity.this, "id: " +index, Toast.LENGTH_SHORT).show();
+//        switch (item.getItemId()) {
+//            case 1:
+//
+//                return true;
+//            case 2:
+//
+//                return true;
+//            default:
+//                return false;
+//        }
+        return false;
+    }
+
+
+
 
     public void setVehicleDisplay(){
 

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddVehicleActivity">
+    tools:context=".AddVehicleActivity"
+    android:background="@color/darkPurple">
 
 
     <android.support.v7.widget.CardView
@@ -17,7 +18,8 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.44">
+        app:layout_constraintVertical_bias="0.44"
+        android:backgroundTint="@color/purple">
 
         <ImageView
             android:id="@+id/imageViewNewCarPicture"
@@ -31,7 +33,8 @@
             android:layout_marginBottom="8dp"
             android:src="@drawable/add_photo"
             tools:ignore="ContentDescription"
-            tools:srcCompat="@drawable/add_photo" />
+            tools:srcCompat="@drawable/add_photo"
+            />
 
     </android.support.v7.widget.CardView>
 
@@ -47,6 +50,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/name"
+        android:textColorHint="@android:color/white"
         android:imeOptions="actionNext"
         android:inputType="textCapSentences|text"
         android:maxLength="18"
@@ -56,7 +60,9 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.937" />
+        app:layout_constraintVertical_bias="0.937"
+        android:backgroundTint="@android:color/white"
+        android:textColor="@android:color/white"/>
 
     <EditText
         android:id="@+id/vehicleDescription"
@@ -69,6 +75,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/description"
+        android:textColorHint="@android:color/white"
         android:inputType="textCapSentences|text"
         android:maxLength="100"
 
@@ -78,7 +85,9 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.92" />
+        app:layout_constraintVertical_bias="0.92"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@android:color/white"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/createVehicleButton"
@@ -115,6 +124,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/white"
         />
 
 

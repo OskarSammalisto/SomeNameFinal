@@ -1,7 +1,11 @@
 package com.example.somename;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +27,8 @@ public class LogInActivity extends AppCompatActivity {
     private TextView passwordView;
     private Button logInButton;
     private Button signUpButton;
+    private static final int REQUEST_LOCATION = 1;
+    private static final int REQUEST_CAMERA = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,17 @@ public class LogInActivity extends AppCompatActivity {
         logInButton = findViewById(R.id.logIn);
         signUpButton = findViewById(R.id.signUp);
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("gps_test", "no permission");
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA);
+        }
+
 
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null) {
@@ -45,10 +62,15 @@ public class LogInActivity extends AppCompatActivity {
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String email = emailView.getText().toString();
                 String password = passwordView.getText().toString();
+                if (email.length() != 0 && password.length() != 0){
+                    signIn(email, password);
+                } else {
+                    Toast.makeText(LogInActivity.this, "You must enter an email and password.", Toast.LENGTH_SHORT).show();
+                }
 
-                signIn(email, password);
             }
         });
 
@@ -58,7 +80,13 @@ public class LogInActivity extends AppCompatActivity {
                 String email = emailView.getText().toString();
                 String password = passwordView.getText().toString();
 
-                createAccount(email, password);
+                if (email.length() != 0 && password.length() != 0){
+                    createAccount(email, password);
+                } else {
+                    Toast.makeText(LogInActivity.this, "You must enter an email and password.", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
