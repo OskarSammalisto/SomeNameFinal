@@ -6,11 +6,98 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/purple</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="android:background">@color/darkPurple</item>
+        <item name="cardViewStyle">@style/MyCardViewStyle</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:bottomMedium">@color/purple</item>
+        <item name="upperLayer">@color/purple</item>
+        <item name="editTextStyle">@style/EditTextStyle</item>
+        <item name="buttonStyle">@style/ButtonStyle</item>
+    </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Button">
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:width">80dp</item>
+        <item name="android:height">35dp</item>
+
+
     </style>
 
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
-        <item name="android:popupBackground">@android:color/white</item>
+
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">@android:color/white</item>
+
     </style>
+
+    <style name="EditTextStyle" parent="android:Widget.EditText">
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+    </style>
+
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="MyCardViewStyle" parent="Base.CardView">
+        <item name="android:backgroundTint">@color/purple</item>
+        <item name="android:background">@color/purple</item>
+    </style>
+
+
+
+
+
+    <!-- Light theme. -->
+    <style name="LightAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryLightTheme</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkLightTheme</item>
+        <item name="colorAccent">@color/colorAccentLightTheme</item>
+        <item name="android:background">@color/colorPrimaryLightTheme</item>
+        <item name="cardViewStyle">@style/MyCardViewStyleLight</item>
+        <item name="android:textViewStyle">@style/TextViewStyleLight</item>
+        <item name="android:bottomMedium">@color/purple</item>
+        <item name="upperLayer">@color/colorPrimaryDarkLightTheme</item>
+        <item name="editTextStyle">@style/EditTextStyleLight</item>
+        <item name="buttonStyle">@style/ButtonStyleLight</item>
+    </style>
+
+    <style name="ButtonStyleLight" parent="android:Widget.Button">
+        <item name="android:background">@color/colorAccentLightTheme</item>
+        <item name="android:width">80dp</item>
+        <item name="android:height">35dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="PopupMenuLight" parent="@android:style/Widget.PopupMenu">
+
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">@android:color/white</item>
+
+    </style>
+
+    <style name="EditTextStyleLight" parent="android:Widget.EditText">
+        <item name="android:textColorHint">@android:color/black</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:backgroundTint">@color/colorPrimaryLightTheme</item>
+    </style>
+
+    <style name="TextViewStyleLight" parent="android:Widget.TextView">
+
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="MyCardViewStyleLight" parent="Base.CardView">
+        <item name="android:backgroundTint">@color/colorPrimaryDarkLightTheme</item>
+        <item name="android:background">@color/colorPrimaryDarkLightTheme</item>
+    </style>
+
+
+
 
 </resources>

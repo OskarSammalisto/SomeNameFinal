@@ -3,8 +3,10 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:id="@+id/customVehicleListLayout"
-    android:background="@color/purple"
+    android:background="?attr/upperLayer"
+
    >
+
 
     <ImageView
         android:id="@+id/vehicleLogo"
@@ -15,13 +17,19 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/vehicleLogo">
+        android:layout_toRightOf="@id/vehicleLogo"
+        android:background="?attr/upperLayer"
+
+        >
 
         <TextView
             android:id="@+id/vehicleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"/>
+            android:background="?attr/upperLayer"
+            android:layout_marginLeft="40dp"
+            android:textSize="18dp"
+            android:layout_marginTop="20dp"/>
 
     </RelativeLayout>
 

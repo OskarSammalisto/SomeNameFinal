@@ -7,4 +7,11 @@
     <color name="darkPurple">#000062</color>
     <color name="lightPurple">#6745c2</color>
     <color name="purple">#311a91</color>
+
+
+    <color name="colorPrimaryLightTheme">#81d4fa</color>
+    <color name="colorPrimaryLightLightTheme">#b6ffff</color>
+    <color name="colorPrimaryDarkLightTheme">#4ba3c7</color>
+    <color name="colorAccentLightTheme">#003300</color>
+
 </resources>

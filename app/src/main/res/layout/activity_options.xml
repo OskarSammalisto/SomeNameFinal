@@ -5,8 +5,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".OptionsActivity"
-    android:id="@+id/optionsActivity"
-    android:background="@color/darkPurple">
+    android:id="@+id/optionsActivity">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioCard"
+        android:layout_centerInParent="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/upperLayer">
+
+        <TextView
+            android:id="@+id/radioGroupText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_theme"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"/>
+
+        <RadioGroup
+            android:id="@+id/themeRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/radioGroupText"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp">
+
+
+            <RadioButton
+                android:id="@+id/theme1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/check"/>
+
+            <RadioButton
+                android:id="@+id/theme2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/check"
+                />
+
+            <RadioButton
+                android:id="@+id/theme3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/check"/>
+
+
+
+        </RadioGroup>
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
 
     <Button
         android:id="@+id/logOut"
@@ -14,7 +72,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/log_out"
-        android:background="@color/colorAccent"/>
+        android:layout_below="@id/radioCard"
+        android:layout_marginTop="40dp"
+        android:text="@string/log_out"/>
 
 </RelativeLayout>
