@@ -34,7 +34,8 @@
             android:orientation="horizontal"
             android:layout_below="@id/radioGroupText"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="40dp">
+            android:layout_marginBottom="40dp"
+            android:background="@android:color/transparent">
 
 
             <RadioButton

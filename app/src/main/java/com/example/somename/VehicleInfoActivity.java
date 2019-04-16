@@ -1,11 +1,16 @@
 package com.example.somename;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Parcelable;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +38,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
     private Uri uri;
     private String uriString;
     private Button deleteVehicleFab;
+    private Button shareButton;
     FirebaseFirestore db;
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private FirebaseAuth mAuth;
@@ -67,6 +73,27 @@ public class VehicleInfoActivity extends AppCompatActivity {
         vehicleDescription.setText(vehicleList.get(vehicle).getDescription());
 
         ImageView imageView = findViewById(R.id.vehicleImage);
+
+        shareButton = findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(vehicleList.get(vehicle).getUri());
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.putExtra(Intent.EXTRA_EMAIL, "Vehicle" +vehicleList.get(vehicle).getName());
+                email.putExtra(Intent.EXTRA_SUBJECT, "The Subject");
+                email.setType("text/plain");
+                email.putExtra(android.content.Intent.EXTRA_TEXT, "Vehicle: " +vehicleList.get(vehicle).getName() +" +vehicleList.get(vehicle).getLatitude()is located at: " +"https://www.google.com/maps/search/?api=1&query=" +vehicleList.get(vehicle).getLatitude() +","+vehicleList.get(vehicle).getLongitude());
+                //email.putExtra(Intent.EXTRA_STREAM, sendFile);
+                startActivity(Intent.createChooser(email, "Send Email"));
+
+            }
+        });
 
 
 
