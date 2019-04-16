@@ -2,6 +2,7 @@ package com.example.somename;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -35,6 +36,24 @@ public class VehicleListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //get theme selection from sharedPref and apply to activity.
+        SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+        int theme = preferences.getInt("theme", 1);
+
+        if(theme == 1) {
+            setTheme(R.style.AppTheme);
+        }
+
+        if(theme == 2) {
+            setTheme(R.style.LightAppTheme);
+        }
+
+        if(theme == 3) {
+            setTheme(R.style.DarkAppTheme);
+        }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_list);
 

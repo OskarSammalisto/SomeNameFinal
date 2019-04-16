@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_below="@id/radioGroupText"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:layout_marginBottom="40dp"
             android:background="@android:color/transparent">
 
@@ -60,6 +60,15 @@
 
 
         </RadioGroup>
+
+            <Button
+                android:id="@+id/confirmThemeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/themeRadioGroup"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="40dp"
+                android:text="Set Theme"/>
 
 
         </RelativeLayout>

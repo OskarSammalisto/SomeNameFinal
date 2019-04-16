@@ -31,6 +31,9 @@ public class VehicleListAdapter extends ArrayAdapter<String> {
 
 
     public VehicleListAdapter(Context context, ArrayList vehicles){
+
+
+
         super(context, -1, vehicles);
 
         this.vehicles = vehicles;

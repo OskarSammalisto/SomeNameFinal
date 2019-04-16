@@ -99,5 +99,53 @@
 
 
 
+    <!-- Dark theme. -->
+    <style name="DarkAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryDarkTheme</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDarkTheme</item>
+        <item name="colorAccent">@color/colorAccentDarkTheme</item>
+        <item name="android:background">@color/colorPrimaryDarkTheme</item>
+        <item name="cardViewStyle">@style/MyCardViewStyleDark</item>
+        <item name="android:textViewStyle">@style/TextViewStyleDark</item>
+        <item name="android:bottomMedium">@color/colorPrimaryLightDarkTheme</item>
+        <item name="upperLayer">@color/colorPrimaryDarkDarkTheme</item>
+        <item name="editTextStyle">@style/EditTextStyleDark</item>
+        <item name="buttonStyle">@style/ButtonStyleDark</item>
+    </style>
+
+    <style name="ButtonStyleDark" parent="android:Widget.Button">
+        <item name="android:background">@color/colorAccentDarkTheme</item>
+        <item name="android:width">80dp</item>
+        <item name="android:height">35dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="PopupMenuDark" parent="@android:style/Widget.PopupMenu">
+
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@color/colorPrimaryDarkTheme</item>
+
+    </style>
+
+    <style name="EditTextStyleDark" parent="android:Widget.EditText">
+        <item name="android:textColorHint">@android:color/black</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:backgroundTint">@color/colorPrimaryDarkTheme</item>
+    </style>
+
+    <style name="TextViewStyleDark" parent="android:Widget.TextView">
+
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="MyCardViewStyleDark" parent="Base.CardView">
+        <item name="android:backgroundTint">@color/colorPrimaryDarkDarkTheme</item>
+        <item name="android:background">@color/colorPrimaryDarkDarkTheme</item>
+    </style>
+
+
+
 
 </resources>

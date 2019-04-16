@@ -2,6 +2,7 @@ package com.example.somename;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -32,6 +33,23 @@ public class LogInActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //get theme selection from sharedPref and apply to activity.
+        SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+        int theme = preferences.getInt("theme", 1);
+
+        if(theme == 1) {
+            setTheme(R.style.AppTheme);
+        }
+
+        if(theme == 2) {
+            setTheme(R.style.LightAppTheme);
+        }
+
+        if(theme == 3) {
+            setTheme(R.style.DarkAppTheme);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 

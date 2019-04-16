@@ -14,4 +14,9 @@
     <color name="colorPrimaryDarkLightTheme">#4ba3c7</color>
     <color name="colorAccentLightTheme">#003300</color>
 
+    <color name="colorPrimaryDarkTheme">#212121</color>
+    <color name="colorPrimaryLightDarkTheme">#484848</color>
+    <color name="colorPrimaryDarkDarkTheme">#000000</color>
+    <color name="colorAccentDarkTheme">#102027</color>
+
 </resources>
