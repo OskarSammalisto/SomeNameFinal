@@ -140,9 +140,9 @@ public class VehicleInfoActivity extends AppCompatActivity {
             public void onClick(final View v) {
 
                 new AlertDialog.Builder(VehicleInfoActivity.this)
-                        .setMessage("Delete?")
+                        .setMessage(getString(R.string.delete_vehicle))
                         .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
 //                                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
@@ -176,7 +176,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
 
                             }
                         })
-                        .setNegativeButton("No", null)
+                        .setNegativeButton(R.string.no, null)
                         .show();
 
 

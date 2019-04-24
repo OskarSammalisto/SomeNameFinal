@@ -4,13 +4,13 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/purple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:background">@color/darkPurple</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="cardViewStyle">@style/MyCardViewStyle</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
-        <item name="android:bottomMedium">@color/purple</item>
-        <item name="upperLayer">@color/purple</item>
+        <item name="android:bottomMedium">@color/colorPrimaryDark</item>
+        <item name="upperLayer">@color/colorPrimaryDark</item>
         <item name="editTextStyle">@style/EditTextStyle</item>
         <item name="buttonStyle">@style/ButtonStyle</item>
     </style>
@@ -19,6 +19,7 @@
         <item name="android:background">@color/colorAccent</item>
         <item name="android:width">80dp</item>
         <item name="android:height">35dp</item>
+
 
 
     </style>
@@ -43,8 +44,9 @@
     </style>
 
     <style name="MyCardViewStyle" parent="Base.CardView">
-        <item name="android:backgroundTint">@color/purple</item>
-        <item name="android:background">@color/purple</item>
+        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
 
@@ -60,7 +62,7 @@
         <item name="android:background">@color/colorPrimaryLightTheme</item>
         <item name="cardViewStyle">@style/MyCardViewStyleLight</item>
         <item name="android:textViewStyle">@style/TextViewStyleLight</item>
-        <item name="android:bottomMedium">@color/purple</item>
+        <item name="android:bottomMedium">@color/colorPrimaryDark</item>
         <item name="upperLayer">@color/colorPrimaryDarkLightTheme</item>
         <item name="editTextStyle">@style/EditTextStyleLight</item>
         <item name="buttonStyle">@style/ButtonStyleLight</item>
@@ -83,7 +85,7 @@
     <style name="EditTextStyleLight" parent="android:Widget.EditText">
         <item name="android:textColorHint">@android:color/black</item>
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:backgroundTint">@color/colorPrimaryLightTheme</item>
+        <item name="android:backgroundTint">@android:color/black</item>
     </style>
 
     <style name="TextViewStyleLight" parent="android:Widget.TextView">
@@ -94,7 +96,8 @@
 
     <style name="MyCardViewStyleLight" parent="Base.CardView">
         <item name="android:backgroundTint">@color/colorPrimaryDarkLightTheme</item>
-        <item name="android:background">@color/colorPrimaryDarkLightTheme</item>
+        <item name="android:background">@color/colorPrimaryLightDarkTheme</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
 
@@ -112,6 +115,12 @@
         <item name="upperLayer">@color/colorPrimaryDarkDarkTheme</item>
         <item name="editTextStyle">@style/EditTextStyleDark</item>
         <item name="buttonStyle">@style/ButtonStyleDark</item>
+        <item name="radioButtonStyle">@style/RadioButton</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:buttonTint">@color/colorPrimaryDarkTheme</item>
     </style>
 
     <style name="ButtonStyleDark" parent="android:Widget.Button">
@@ -129,8 +138,8 @@
     </style>
 
     <style name="EditTextStyleDark" parent="android:Widget.EditText">
-        <item name="android:textColorHint">@android:color/black</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:backgroundTint">@color/colorPrimaryDarkTheme</item>
     </style>
 
@@ -143,6 +152,7 @@
     <style name="MyCardViewStyleDark" parent="Base.CardView">
         <item name="android:backgroundTint">@color/colorPrimaryDarkDarkTheme</item>
         <item name="android:background">@color/colorPrimaryDarkDarkTheme</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
 

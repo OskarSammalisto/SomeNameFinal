@@ -95,7 +95,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:text="Delete"
+        android:text="@string/delete"
         android:src="@drawable/baseline_delete_forever_black_18dp"/>
 
 </RelativeLayout>

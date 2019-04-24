@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SomeName</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="name">Namn</string>
+    <string name="description">Beskrivning</string>
+    <string name="description_of_the_vehicle_goes_here_goes_here">Beskrivning av fartyget finns har</string>
+    <string name="name_of_vehicle">Fartygets namn</string>
+    <string name="vehicle">Fartyg:</string>
+    <string name="log_in">Logga Inn</string>
+    <string name="sign_up">Skapa Konto</string>
+    <string name="email">Epost</string>
+    <string name="password">Lösenord</string>
+    <string name="log_out">Logga Ut</string>
+    <string name="downloading_assets">Laddar Tilgångar</string>
+    <string name="select_theme">Välj Tema</string>
+    <string name="share">Dela</string>
+    <string name="add_location">Spara Position?</string>
+    <string name="set_theme">Välj Tema</string>
+    <string name="empty_email">Du måste fylla i alla felt.</string>
+    <string name="new_user_failed">Kunde inte skapa användare!</string>
+    <string name="sign_in_failed">Inloggning mislyckat!</string>
+    <string name="add_vehicle_fill_all">Du måste fylla in namn, beskrivning och ta en bild!</string>
+    <string name="no_saved_vehicles">Du har inga sparade fartyg.</string>
+    <string name="no_saved_possition">Fartyg har ingen sparad position!</string>
+    <string name="my_location_button_clicked">Positions knapp tryckt</string>
+    <string name="current_location">Har Är Du!</string>
+    <string name="park">Vill du parkera </string>
+    <string name="here"> på din position?</string>
+    <string name="delete">Radera</string>
+    <string name="delete_vehicle">Radera fartyg?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+</resources>

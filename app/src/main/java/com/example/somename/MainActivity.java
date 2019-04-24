@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         layout.setOnTouchListener(new com.example.somename.OnSwipeTouchListener(MainActivity.this) {
             public void onSwipeTop() {
-              //  Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+
             }
             public void onSwipeRight() {
                 Intent intent = new Intent(MainActivity.this, VehicleListActivity.class);
@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                // Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+
             }
 
             public void onSwipeLeft() {
@@ -319,11 +319,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
-             //   Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+
             }
 
             public void onSwipeBottom() {
-            //    Toast.makeText(MainActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+
             }
 
         });
@@ -336,9 +336,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (!vehicleList.isEmpty()){
 
                     new AlertDialog.Builder(MainActivity.this)
-                            .setMessage("Park " +vehicleList.get(currentVehiclePosition).getName() + " here?")
+                            .setMessage(getString(R.string.park) +" " +vehicleList.get(currentVehiclePosition).getName() +" " + getString(R.string.here))
                             .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
 
                                     //set lat lon on vehicle
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 }
                             })
-                            .setNegativeButton("No", null)
+                            .setNegativeButton(R.string.no, null)
                             .show();
 
 
@@ -407,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                 } else {
-                    Toast.makeText(MainActivity.this, "You have no saved vehicles.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.no_saved_vehicles, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 moveMapToLocation = 0;
             } else {
-                Toast.makeText(MainActivity.this, "Vehicle has no saved position!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.no_saved_possition, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -663,12 +663,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.current_location, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.my_location_button_clicked, Toast.LENGTH_SHORT).show();
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;

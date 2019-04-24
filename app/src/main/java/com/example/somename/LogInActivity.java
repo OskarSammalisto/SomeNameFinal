@@ -86,7 +86,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (email.length() != 0 && password.length() != 0){
                     signIn(email, password);
                 } else {
-                    Toast.makeText(LogInActivity.this, "You must enter an email and password.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogInActivity.this, R.string.empty_email, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -101,7 +101,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (email.length() != 0 && password.length() != 0){
                     createAccount(email, password);
                 } else {
-                    Toast.makeText(LogInActivity.this, "You must enter an email and password.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogInActivity.this, R.string.empty_email, Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -125,7 +125,7 @@ public class LogInActivity extends AppCompatActivity {
                     signIn(email, password);
                 } else {
                     Log.d("!!!!", "failed creating user" , task.getException());
-                    Toast.makeText(LogInActivity.this,"User creation failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogInActivity.this,R.string.new_user_failed, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -140,7 +140,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     intentMainActivity();
                 } else {
-                    Toast.makeText(LogInActivity.this, "Sign In failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogInActivity.this, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
                 }
             }
         });

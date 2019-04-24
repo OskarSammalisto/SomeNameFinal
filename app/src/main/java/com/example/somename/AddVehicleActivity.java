@@ -188,7 +188,7 @@ ArrayList<Vehicle> vehicleList = new ArrayList<>();
                 //check if all fields are filled, and pick is taken
                 if (photoFile == null || newVehicleName.getText().toString().length() == 0 || newVehicleDescription.getText().toString().length() == 0 || duplicateName){
 
-                    Toast.makeText(AddVehicleActivity.this, "You must fill in name, description and take a pic", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddVehicleActivity.this, R.string.add_vehicle_fill_all, Toast.LENGTH_SHORT).show();
                 }
 
                 //make function that checks if vehicle with same name exists

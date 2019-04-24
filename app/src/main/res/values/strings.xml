@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">SomeName</string>
     <string name="title_activity_maps">Map</string>
-    <string name="name">name</string>
-    <string name="description">description</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
     <string name="description_of_the_vehicle_goes_here_goes_here">Description of the vehicle goes here goes here</string>
     <string name="name_of_vehicle">Name Of Vehicle</string>
     <string name="vehicle">Vehicle:</string>
@@ -11,12 +11,23 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="log_out">Log Out</string>
-    <string name="downloading_assets">Downloading Assets</string>
+    <string name="downloading_assets">Loading Assets</string>
     <string name="select_theme">Select Theme</string>
     <string name="share">Share</string>
-    <string-array name="vehicle_spinner_icons">
-        <item>Car</item>
-        <item>Bike</item>
-        <item>Boat</item>
-    </string-array>
+    <string name="add_location">Add location?</string>
+    <string name="set_theme">Set Theme</string>
+    <string name="empty_email">You must enter an email and password.</string>
+    <string name="new_user_failed">User creation failed</string>
+    <string name="sign_in_failed">Sign In failed</string>
+    <string name="add_vehicle_fill_all">You must fill in name, description and take a pic</string>
+    <string name="no_saved_vehicles">You have no saved vehicles.</string>
+    <string name="no_saved_possition">Vehicle has no saved position!</string>
+    <string name="my_location_button_clicked">MyLocation button clicked</string>
+    <string name="current_location">You Are Here!</string>
+    <string name="park">Park </string>
+    <string name="here"> at current location?</string>
+    <string name="delete">Delete</string>
+    <string name="delete_vehicle">Delete Vehicle?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

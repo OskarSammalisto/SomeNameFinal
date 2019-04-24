@@ -12,27 +12,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/radioCard"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        app:cardCornerRadius="12dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/upperLayer">
 
-        <TextView
-            android:id="@+id/radioGroupText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/select_theme"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"/>
+
 
         <RadioGroup
             android:id="@+id/themeRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/radioGroupText"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="40dp"
             android:background="@android:color/transparent">
@@ -42,20 +36,26 @@
                 android:id="@+id/theme1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/check"/>
+                android:drawableRight="@drawable/primary_theme"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
 
             <RadioButton
                 android:id="@+id/theme2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/check"
+                android:drawableRight="@drawable/light_theme"
+                android:scaleX="0.75"
+                android:scaleY="0.75"
                 />
 
             <RadioButton
                 android:id="@+id/theme3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/check"/>
+                android:drawableRight="@drawable/dark_theme"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
 
 
 
@@ -68,7 +68,7 @@
                 android:layout_below="@id/themeRadioGroup"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="40dp"
-                android:text="Set Theme"/>
+                android:text="@string/set_theme" />
 
 
         </RelativeLayout>
@@ -83,7 +83,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_below="@id/radioCard"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="100dp"
         android:text="@string/log_out"/>
 
 </RelativeLayout>
