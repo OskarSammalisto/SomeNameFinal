@@ -106,10 +106,12 @@ public class VehicleInfoActivity extends AppCompatActivity {
                 }
                 Intent email = new Intent(Intent.ACTION_SEND);
                 email.putExtra(Intent.EXTRA_EMAIL, "Vehicle" +vehicleList.get(vehicle).getName());
-                email.putExtra(Intent.EXTRA_SUBJECT, "The Subject");
+                email.putExtra(Intent.EXTRA_SUBJECT, "Shared Vehicle Position");
                 email.setType("text/plain");
-                email.putExtra(android.content.Intent.EXTRA_TEXT, "Vehicle: " +vehicleList.get(vehicle).getName() +" +vehicleList.get(vehicle).getLatitude()is located at: " +"https://www.google.com/maps/search/?api=1&query=" +vehicleList.get(vehicle).getLatitude() +","+vehicleList.get(vehicle).getLongitude());
-                //email.putExtra(Intent.EXTRA_STREAM, sendFile);
+                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                StrictMode.setVmPolicy(builder.build());
+                email.putExtra(android.content.Intent.EXTRA_TEXT, "Vehicle: " +vehicleList.get(vehicle).getName() +" is located at: " +"https://www.google.com/maps/search/?api=1&query=" +vehicleList.get(vehicle).getLatitude() +","+vehicleList.get(vehicle).getLongitude());
+                email.putExtra(Intent.EXTRA_STREAM, uri);
                 startActivity(Intent.createChooser(email, "Send Email"));
 
             }
