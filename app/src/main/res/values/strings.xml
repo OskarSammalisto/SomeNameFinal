@@ -39,4 +39,5 @@
     <string name="in_app">In app</string>
     <string name="cancel">Cancel</string>
     <string name="vehicle_shared">Shared with</string>
+    <string name="own_email">You can not share with yourself!</string>
 </resources>

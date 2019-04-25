@@ -134,8 +134,12 @@ public class VehicleInfoActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String email = shareEmail.getText().toString();
+                        String userEmail = user.getEmail();
 
-                        if (email.length() != 0) {
+                        if (email.equals(userEmail)) {
+                            Toast.makeText(VehicleInfoActivity.this, R.string.own_email, Toast.LENGTH_SHORT).show();
+                        }
+                        else if (email.length() != 0) {
                             CollectionReference shareRef = db.collection("shared").document(email).collection("sharedVehicles");
                             shareRef.document(vehicleList.get(vehicle).getName()).set(vehicleList.get(vehicle));
                             Toast.makeText(VehicleInfoActivity.this, getString(R.string.vehicle_shared) +": " +email, Toast.LENGTH_SHORT).show();

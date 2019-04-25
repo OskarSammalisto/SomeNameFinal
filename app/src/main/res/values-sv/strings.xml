@@ -40,4 +40,5 @@
     <string name="in_app">I appen</string>
     <string name="cancel">Avbryt</string>
     <string name="vehicle_shared">Delad med</string>
+    <string name="own_email">Du kan inte dela med dig själv!</string>
 </resources>
