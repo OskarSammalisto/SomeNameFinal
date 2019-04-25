@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -102,13 +103,13 @@ public class VehicleInfoActivity extends AppCompatActivity {
 
                 AlertDialog.Builder shareDialog = new AlertDialog.Builder(VehicleInfoActivity.this);
 
-                shareDialog.setTitle("how will you share?");
+                shareDialog.setTitle(getString(R.string.how_share));
 
                 final EditText shareEmail = new EditText(VehicleInfoActivity.this);
-                shareEmail.setHint("Email");
+                shareEmail.setHint(getString(R.string.email_dialog));
                 shareDialog.setView(shareEmail);
 
-                shareDialog.setPositiveButton("Outside", new DialogInterface.OnClickListener() {
+                shareDialog.setPositiveButton(getString(R.string.outside), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Uri uri = Uri.parse(vehicleList.get(vehicle).getUri());
@@ -129,17 +130,24 @@ public class VehicleInfoActivity extends AppCompatActivity {
                     }
                 });
 
-                shareDialog.setNeutralButton("in app", new DialogInterface.OnClickListener() {
+                shareDialog.setNeutralButton(getString(R.string.in_app), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String email = shareEmail.getText().toString();
-                        CollectionReference shareRef = db.collection("shared").document(email).collection("sharedVehicles");
-                        shareRef.document(vehicleList.get(vehicle).getName()).set(vehicleList.get(vehicle));
+
+                        if (email.length() != 0) {
+                            CollectionReference shareRef = db.collection("shared").document(email).collection("sharedVehicles");
+                            shareRef.document(vehicleList.get(vehicle).getName()).set(vehicleList.get(vehicle));
+                            Toast.makeText(VehicleInfoActivity.this, getString(R.string.vehicle_shared) +": " +email, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(VehicleInfoActivity.this, R.string.email_empty, Toast.LENGTH_SHORT).show();
+                        }
+
 
                     }
                 });
 
-                shareDialog.setNegativeButton("Cancel", null);
+                shareDialog.setNegativeButton(getString(R.string.cancel), null);
 
                 shareDialog.show();
 

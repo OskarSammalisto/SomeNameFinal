@@ -30,4 +30,13 @@
     <string name="delete_vehicle">Delete Vehicle?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="vehicles_shared_with_you">Vehicles shared with you.</string>
+    <string name="your_vehicles">Your vehicles</string>
+    <string name="email_empty">Email was empty</string>
+    <string name="how_share">How would you like to share the vehicle?</string>
+    <string name="email_dialog">Email</string>
+    <string name="outside">Other</string>
+    <string name="in_app">In app</string>
+    <string name="cancel">Cancel</string>
+    <string name="vehicle_shared">Shared with</string>
 </resources>

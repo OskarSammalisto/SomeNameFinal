@@ -9,9 +9,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -120,6 +122,10 @@ public class SharedVehiclesActivity extends AppCompatActivity {
                                 vehicleList.add(sharedVehicles.get(position));
                                 CollectionReference vehicleRef = db.collection("users").document(user.getUid()).collection("vehicles");
                                 vehicleRef.document(sharedVehicles.get(position).getName()).set(sharedVehicles.get(position));
+
+                                sharedVehicleRef.document(sharedVehicles.get(position).getName()).delete();
+                                sharedVehicles.remove(position);
+                                setAdapter();
                             }
                         })
                         .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
@@ -136,6 +142,8 @@ public class SharedVehiclesActivity extends AppCompatActivity {
         });
 
 
+        setAdapter();
+
     }
 
     public void setAdapter() {
@@ -144,6 +152,18 @@ public class SharedVehiclesActivity extends AppCompatActivity {
         VehicleListAdapter vehicleListAdapter = new VehicleListAdapter(this, sharedVehicles);
 
         sharedListView.setAdapter(vehicleListAdapter);
+
+//        TextView emptyTextView = new TextView(this);
+//
+//        if (sharedVehicles.isEmpty()) {
+//            ConstraintLayout layout = findViewById(R.id.sharedVehiclesActivity);
+//
+//            emptyTextView.setText("You have no shared vehicles");
+//            layout.addView(emptyTextView);
+//        }
+//        else {
+//            emptyTextView.setVisibility(View.GONE);
+//        }
 
 
     }

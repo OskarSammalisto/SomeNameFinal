@@ -31,4 +31,13 @@
     <string name="delete_vehicle">Radera fartyg?</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
+    <string name="vehicles_shared_with_you">Fartyg delade med dig.</string>
+    <string name="your_vehicles">Dina fartyg</string>
+    <string name="email_empty">Epost var tom</string>
+    <string name="how_share">Hur vill du dela fartyget?</string>
+    <string name="email_dialog">Epost</string>
+    <string name="outside">Annat</string>
+    <string name="in_app">I appen</string>
+    <string name="cancel">Avbryt</string>
+    <string name="vehicle_shared">Delad med</string>
 </resources>

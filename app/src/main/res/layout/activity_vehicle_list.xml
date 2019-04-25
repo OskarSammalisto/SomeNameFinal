@@ -8,6 +8,8 @@
     android:id="@+id/vehicleListActivity"
     >
 
+    
+
     <ListView
         android:id="@+id/vehicleListView"
         android:layout_width="match_parent"
