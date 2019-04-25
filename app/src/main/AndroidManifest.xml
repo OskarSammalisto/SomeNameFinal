@@ -21,6 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/LightAppTheme">
+        <activity android:name=".SharedVehiclesActivity"></activity>
+
         <service
             android:name=".MessageService"
             android:enabled="true"

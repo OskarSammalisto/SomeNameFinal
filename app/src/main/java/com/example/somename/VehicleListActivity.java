@@ -136,6 +136,13 @@ public class VehicleListActivity extends AppCompatActivity {
             }
             public void onSwipeRight() {
 
+                Intent intent = new Intent(VehicleListActivity.this, SharedVehiclesActivity.class);
+
+                intent.putParcelableArrayListExtra("arrayListPars", vehicleList);
+
+                startActivity(intent);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
              // Toast.makeText(VehicleListActivity.this, "right", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeLeft() {

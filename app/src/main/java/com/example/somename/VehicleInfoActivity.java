@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,7 +50,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
 
         //get theme selection from sharedPref and apply to activity.
         SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
-        int theme = preferences.getInt("theme", 1);
+        final int theme = preferences.getInt("theme", 1);
 
         if(theme == 1) {
             setTheme(R.style.AppTheme);
@@ -98,21 +99,86 @@ public class VehicleInfoActivity extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(vehicleList.get(vehicle).getUri());
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Intent email = new Intent(Intent.ACTION_SEND);
-                email.putExtra(Intent.EXTRA_EMAIL, "Vehicle" +vehicleList.get(vehicle).getName());
-                email.putExtra(Intent.EXTRA_SUBJECT, "Shared Vehicle Position");
-                email.setType("text/plain");
-                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                StrictMode.setVmPolicy(builder.build());
-                email.putExtra(android.content.Intent.EXTRA_TEXT, "Vehicle: " +vehicleList.get(vehicle).getName() +" is located at: " +"https://www.google.com/maps/search/?api=1&query=" +vehicleList.get(vehicle).getLatitude() +","+vehicleList.get(vehicle).getLongitude());
-                email.putExtra(Intent.EXTRA_STREAM, uri);
-                startActivity(Intent.createChooser(email, "Send Email"));
+
+                AlertDialog.Builder shareDialog = new AlertDialog.Builder(VehicleInfoActivity.this);
+
+                shareDialog.setTitle("how will you share?");
+
+                final EditText shareEmail = new EditText(VehicleInfoActivity.this);
+                shareEmail.setHint("Email");
+                shareDialog.setView(shareEmail);
+
+                shareDialog.setPositiveButton("Outside", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = Uri.parse(vehicleList.get(vehicle).getUri());
+                                try {
+                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                Intent email = new Intent(Intent.ACTION_SEND);
+                                email.putExtra(Intent.EXTRA_EMAIL, new String[]{shareEmail.getText().toString()});
+                                email.putExtra(Intent.EXTRA_SUBJECT, "Shared Vehicle Position");
+                                email.setType("text/plain");
+                                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                                StrictMode.setVmPolicy(builder.build());
+                                email.putExtra(android.content.Intent.EXTRA_TEXT, "Vehicle: " +vehicleList.get(vehicle).getName() +" is located at: " +"https://www.google.com/maps/search/?api=1&query=" +vehicleList.get(vehicle).getLatitude() +","+vehicleList.get(vehicle).getLongitude());
+                                email.putExtra(Intent.EXTRA_STREAM, uri);
+                                startActivity(Intent.createChooser(email, "Send Email"));
+                    }
+                });
+
+                shareDialog.setNeutralButton("in app", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String email = shareEmail.getText().toString();
+                        CollectionReference shareRef = db.collection("shared").document(email).collection("sharedVehicles");
+                        shareRef.document(vehicleList.get(vehicle).getName()).set(vehicleList.get(vehicle));
+
+                    }
+                });
+
+                shareDialog.setNegativeButton("Cancel", null);
+
+                shareDialog.show();
+
+//                new AlertDialog.Builder(VehicleInfoActivity.this)
+//                        .setMessage("How will you share")
+//                        .setCancelable(false)
+//                        .setPositiveButton("outside", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Uri uri = Uri.parse(vehicleList.get(vehicle).getUri());
+//                                try {
+//                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                Intent email = new Intent(Intent.ACTION_SEND);
+//                                email.putExtra(Intent.EXTRA_EMAIL, "Vehicle" +vehicleList.get(vehicle).getName());
+//                                email.putExtra(Intent.EXTRA_SUBJECT, "Shared Vehicle Position");
+//                                email.setType("text/plain");
+//                                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//                                StrictMode.setVmPolicy(builder.build());
+//                                email.putExtra(android.content.Intent.EXTRA_TEXT, "Vehicle: " +vehicleList.get(vehicle).getName() +" is located at: " +"https://www.google.com/maps/search/?api=1&query=" +vehicleList.get(vehicle).getLatitude() +","+vehicleList.get(vehicle).getLongitude());
+//                                email.putExtra(Intent.EXTRA_STREAM, uri);
+//                                startActivity(Intent.createChooser(email, "Send Email"));
+//
+//                            }
+//                        })
+//                        .setNeutralButton("in app", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                String email = "a";
+//                                CollectionReference shareRef = db.collection("shared").document(email).collection("sharedVehicles");
+//                                shareRef.document(vehicleList.get(vehicle).getName()).set(vehicleList.get(vehicle));
+//
+//                            }
+//                        })
+//                        .setNegativeButton("cancel", null)
+//                        .show();
+
 
             }
         });
@@ -150,6 +216,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
 //                                CollectionReference collRef = db.collection(vehicleList.get(vehicle).getVehiclesRef());
 
                                 vehicleRef.document(vehicleList.get(vehicle).getName()).delete();
+
 
                                 String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 StorageReference deletePhoto =  storageRef.child("images/" +userUid +"/" +vehicleList.get(vehicle).getName() +".jpg"); //storageRef.child("images/" +vehicleList.get(vehicle).getName() +".jpg");
